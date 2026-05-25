@@ -3,6 +3,7 @@ import cors from "cors";
 import { env } from "./services/env.js";
 import { notFound, errorHandler } from "./middleware/error-handler.js";
 import usersRouter from "./routes/users.routes.js";
+import profileRouter from "./routes/profile.routes.js";
 
 const app = express();
 
@@ -14,9 +15,9 @@ app.use((req, _res, next) => {
 });
 
 app.use("/api/users", usersRouter);
+app.use("/api/profiles", profileRouter);
 
 // Route mounts added in later tasks:
-// app.use("/api/profiles", profileRouter);
 // app.use("/api/browse", browseRouter);
 // app.use("/api/subscription", subscriptionRouter);
 
