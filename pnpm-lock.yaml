@@ -47,6 +47,9 @@ importers:
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.3
+      tiny-tfidf:
+        specifier: ^0.9.1
+        version: 0.9.1
       zod:
         specifier: ^3.23.0
         version: 3.25.76
@@ -1281,6 +1284,9 @@ packages:
   supertest@7.2.2:
     resolution: {integrity: sha512-oK8WG9diS3DlhdUkcFn4tkNIiIbBx9lI2ClF8K+b2/m8Eyv47LSawxUzZQSNKUrVb2KsqeTDCcjAAVPYaSLVTA==}
     engines: {node: '>=14.18.0'}
+
+  tiny-tfidf@0.9.1:
+    resolution: {integrity: sha512-KfXj7aHwpHWtecGskoC6TIgAy+AFT8ZyjSLDHFTbhlK29RQL+77xH1ZbUSp1mTe7Y+/Ox3GccvynoNUBWJHK3A==}
 
   tinybench@2.9.0:
     resolution: {integrity: sha512-0+DUvqWMValLmha6lr4kD8iAMK1HzV0/aKnCtWb9v9641TnP/MFb7Pc2bxoxQjTXAErryXVgUOfv2YqNllqGeg==}
@@ -2525,6 +2531,8 @@ snapshots:
       superagent: 10.3.0
     transitivePeerDependencies:
       - supports-color
+
+  tiny-tfidf@0.9.1: {}
 
   tinybench@2.9.0: {}
 
