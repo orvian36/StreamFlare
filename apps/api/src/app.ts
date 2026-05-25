@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { env } from "./services/env.js";
 import { notFound, errorHandler } from "./middleware/error-handler.js";
+import usersRouter from "./routes/users.routes.js";
 
 const app = express();
 
@@ -12,8 +13,9 @@ app.use((req, _res, next) => {
   next();
 });
 
-// Route mounts added in Tasks 7–10:
-// app.use("/api/users", usersRouter);
+app.use("/api/users", usersRouter);
+
+// Route mounts added in later tasks:
 // app.use("/api/profiles", profileRouter);
 // app.use("/api/browse", browseRouter);
 // app.use("/api/subscription", subscriptionRouter);
