@@ -1,0 +1,303 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  email       String   @id
+  name        String
+  dob         DateTime
+  country     String
+  creditCard  String   @map("credit_card")
+  password    String
+  phone       String?
+  joined      DateTime @default(now())
+  maxProfiles Int      @default(0) @map("max_profiles")
+
+  profiles      Profile[]
+  subscriptions Subscription[]
+
+  @@map("user_netflix")
+}
+
+model Profile {
+  id        Int      @id @default(autoincrement())
+  profileId String   @map("profile_id")
+  email     String
+  dob       DateTime
+
+  user             User              @relation(fields: [email], references: [email], onDelete: Cascade)
+  movieWatches     MovieWatch[]
+  movieWatchlists  MovieWatchlist[]
+  showWatches      ShowWatch[]
+  showWatchlists   ShowWatchlist[]
+  episodeWatches   EpisodeWatch[]
+
+  @@unique([email, profileId])
+  @@map("profile")
+}
+
+model Subscription {
+  subId           Int       @id @default(autoincrement()) @map("sub_id")
+  subType         String    @map("sub_type")
+  email           String
+  startDate       DateTime  @default(now()) @map("start_date")
+  endDate         DateTime  @map("end_date")
+  bill            Float     @default(0)
+  totalBill       Float     @default(0) @map("total_bill")
+  running         Int?
+  terminationDate DateTime? @map("termination_date")
+
+  user User @relation(fields: [email], references: [email], onDelete: Cascade)
+
+  @@map("subscription")
+}
+
+model SubscriptionType {
+  subType     String @id @map("sub_type")
+  bill        Float
+  numProfiles Int    @map("num_profiles")
+
+  @@map("subscription_type")
+}
+
+model Movie {
+  movieId        Int      @id @map("movie_id")
+  title          String
+  country        String?
+  rating         Float    @default(0)
+  totalViews     Int      @default(0) @map("total_views")
+  totalVotes     Int      @default(0) @map("total_votes")
+  description    String?
+  imageUrl       String?  @map("image_url")
+  videoUrl       String?  @map("video_url")
+  length         Float    @default(0)
+  language       String?
+  price          Float    @default(0)
+  maturityRating String?  @map("maturity_rating")
+  releaseDate    DateTime @map("release_date")
+
+  watches      MovieWatch[]
+  watchlists   MovieWatchlist[]
+  genres       MovieGenre[]
+  celebs       MovieCeleb[]
+  similarFrom  MovieSimilarity[] @relation("MovieSimilarFrom")
+  similarTo    MovieSimilarity[] @relation("MovieSimilarTo")
+
+  @@map("movie")
+}
+
+model Show {
+  showId         Int       @id @map("show_id")
+  title          String
+  startDate      DateTime? @map("start_date")
+  endDate        DateTime? @map("end_date")
+  country        String?
+  rating         Float     @default(0)
+  totalViews     Int       @default(0) @map("total_views")
+  totalVotes     Int       @default(0) @map("total_votes")
+  description    String?
+  imageUrl       String?   @map("image_url")
+  videoUrl       String?   @map("video_url")
+  length         Float     @default(0)
+  language       String?
+  seasons        Int       @default(0)
+  episodes       Int       @default(0)
+  price          Float     @default(0)
+  maturityRating String?   @map("maturity_rating")
+
+  episodeList    Episode[]
+  watches        ShowWatch[]
+  watchlists     ShowWatchlist[]
+  genres         ShowGenre[]
+  celebs         ShowCeleb[]
+  similarFrom    ShowSimilarity[] @relation("ShowSimilarFrom")
+  similarTo      ShowSimilarity[] @relation("ShowSimilarTo")
+
+  @@map("show")
+}
+
+model Episode {
+  seasonNo    Int     @map("season_no")
+  episodeNo   Int     @map("episode_no")
+  showId      Int     @map("show_id")
+  title       String?
+  description String?
+  length      Float?
+  imageUrl    String? @map("image_url")
+  videoUrl    String? @map("video_url")
+
+  show           Show           @relation(fields: [showId], references: [showId])
+  episodeWatches EpisodeWatch[]
+
+  @@id([seasonNo, episodeNo, showId])
+  @@map("episode")
+}
+
+model Celeb {
+  celebId  Int     @id @map("celeb_id")
+  name     String?
+  contents Int     @default(0)
+
+  movies MovieCeleb[]
+  shows  ShowCeleb[]
+
+  @@map("celeb")
+}
+
+model Genre {
+  genreId  Int     @id @map("genre_id")
+  name     String?
+  contents Int     @default(0)
+
+  movies MovieGenre[]
+  shows  ShowGenre[]
+
+  @@map("genre")
+}
+
+model MovieWatch {
+  movieId     Int      @map("movie_id")
+  profileId   String   @map("profile_id")
+  email       String
+  rating      Int?
+  watchedUpto Float    @default(0) @map("watched_upto")
+  time        DateTime @default(now())
+
+  movie   Movie   @relation(fields: [movieId], references: [movieId])
+  profile Profile @relation(fields: [email, profileId], references: [email, profileId])
+
+  @@id([movieId, email, profileId])
+  @@map("movie_watch")
+}
+
+model MovieWatchlist {
+  movieId   Int    @map("movie_id")
+  email     String
+  profileId String @map("profile_id")
+
+  movie   Movie   @relation(fields: [movieId], references: [movieId])
+  profile Profile @relation(fields: [email, profileId], references: [email, profileId])
+
+  @@id([movieId, email, profileId])
+  @@map("movie_watchlist")
+}
+
+model MovieGenre {
+  movieId Int @map("movie_id")
+  genreId Int @map("genre_id")
+
+  movie Movie @relation(fields: [movieId], references: [movieId])
+  genre Genre @relation(fields: [genreId], references: [genreId])
+
+  @@id([movieId, genreId])
+  @@map("movie_genre")
+}
+
+model MovieCeleb {
+  movieId Int     @map("movie_id")
+  celebId Int     @map("celeb_id")
+  role    String?
+
+  movie Movie @relation(fields: [movieId], references: [movieId])
+  celeb Celeb @relation(fields: [celebId], references: [celebId])
+
+  @@id([movieId, celebId])
+  @@map("movie_celeb")
+}
+
+model MovieSimilarity {
+  movieId1 Int   @map("movie_id1")
+  movieId2 Int   @map("movie_id2")
+  score    Float
+
+  movie1 Movie @relation("MovieSimilarFrom", fields: [movieId1], references: [movieId])
+  movie2 Movie @relation("MovieSimilarTo",   fields: [movieId2], references: [movieId])
+
+  @@id([movieId1, movieId2])
+  @@map("movie_similarity")
+}
+
+model ShowWatch {
+  profileId   String   @map("profile_id")
+  email       String
+  showId      Int      @map("show_id")
+  rating      Int?
+  status      String?
+  watchedUpto Float    @default(0) @map("watched_upto")
+  time        DateTime @default(now())
+
+  show    Show    @relation(fields: [showId], references: [showId])
+  profile Profile @relation(fields: [email, profileId], references: [email, profileId])
+
+  @@id([profileId, showId, email])
+  @@map("show_watch")
+}
+
+model ShowWatchlist {
+  profileId String @map("profile_id")
+  showId    Int    @map("show_id")
+  email     String
+
+  show    Show    @relation(fields: [showId], references: [showId])
+  profile Profile @relation(fields: [email, profileId], references: [email, profileId])
+
+  @@id([showId, profileId, email])
+  @@map("show_watchlist")
+}
+
+model ShowGenre {
+  showId  Int @map("show_id")
+  genreId Int @map("genre_id")
+
+  show  Show  @relation(fields: [showId], references: [showId])
+  genre Genre @relation(fields: [genreId], references: [genreId])
+
+  @@id([showId, genreId])
+  @@map("show_genre")
+}
+
+model ShowCeleb {
+  showId  Int     @map("show_id")
+  celebId Int     @map("celeb_id")
+  role    String?
+
+  show  Show  @relation(fields: [showId], references: [showId])
+  celeb Celeb @relation(fields: [celebId], references: [celebId])
+
+  @@id([showId, celebId])
+  @@map("show_celeb")
+}
+
+model ShowSimilarity {
+  showId1 Int   @map("show_id1")
+  showId2 Int   @map("show_id2")
+  score   Float
+
+  show1 Show @relation("ShowSimilarFrom", fields: [showId1], references: [showId])
+  show2 Show @relation("ShowSimilarTo",   fields: [showId2], references: [showId])
+
+  @@id([showId1, showId2])
+  @@map("show_similarity")
+}
+
+model EpisodeWatch {
+  profileId   String   @map("profile_id")
+  email       String
+  seasonNo    Int      @map("season_no")
+  episodeNo   Int      @map("episode_no")
+  showId      Int      @map("show_id")
+  status      String?
+  watchedUpto Float    @default(0) @map("watched_upto")
+  time        DateTime @default(now())
+
+  episode Episode @relation(fields: [seasonNo, episodeNo, showId], references: [seasonNo, episodeNo, showId])
+  profile Profile @relation(fields: [email, profileId], references: [email, profileId])
+
+  @@id([profileId, seasonNo, showId, episodeNo, email])
+  @@map("episode_watch")
+}

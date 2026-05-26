@@ -1,0 +1,17 @@
+export const HOME = "/";
+export const SIGN_IN = "/signin";
+export const SIGN_UP = "/signup";
+export const BROWSE = "/browse";
+export const PROFILES = "/profiles";
+export const CREATE_PROFILE = "/profiles/create";
+export const DELETE_PROFILE = "/profiles/delete";
+export const PROFILE_INFO = "/profile";
+export const ADD_SUBSCRIPTION = "/subscription/add";
+export const UPDATE_SUBSCRIPTION = "/subscription/update";
+export const CANCEL_SUBCRIPTION = "/subscription/cancel";
+export const SUBSCRIPTION_HISTORY = "/subscription/history";
+export const ACCOUNT_SETTINGS = "/account";
+export const UPDATE_PHONE = "/account/phone";
+export const UPDATE_PASSWORD = "/account/password";
+export const MOVIE_HISTORY = "/history/movies";
+export const SHOW_HISTORY = "/history/shows";

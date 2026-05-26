@@ -1,82 +1,107 @@
-## StreamFlare
-A simple movie streaming app made for the term project of CSE 3100 (System Project) at Khulna University of Engineering & Technology.
-## Demo Video: 
+# StreamFlare
 
-## Features:
- 1. Movie/TV show streaming
- 2. Personalized recommendation based on your history
- 3. Subscription management
- 4. Flexible search options
- 5. Simple & intuitive UI
+A movie streaming app — refactored from the original Express + React + Oracle codebase into a Turborepo monorepo with three TypeScript apps backed by SQLite via Prisma. Optionally deployable as four containers via `docker compose`.
 
-## Getting Started
+## Apps
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+| App | Stack | Port |
+|---|---|---|
+| `apps/web` | Next.js 14 (App Router) + MUI v5 | 3000 |
+| `apps/api` | Express 4 + TypeScript + Prisma | 5000 |
+| `apps/ml`  | Express + TypeScript wrapper around a Python (scikit-learn) recommendation script | 5001 |
 
-### Prerequisites
+## Shared Packages
 
-What things you need to install the software and how to install them
+- `packages/db` — Prisma schema, generated client, migrations, and seed
+- `packages/types` — Shared TypeScript DTOs for API request/response shapes
 
-1. Node.js
-2. React.js
-3. Oracle 21c
+## Quick Start (Docker)
 
+Requires Docker Desktop.
 
-### Installing
-
-A step by step series of examples that tell you how to get a development env running
-
-1. Backend
+```sh
+cp .env.example .env
+# Edit .env: set JWT_SECRET and TMDB_API_KEY to real values
+docker compose up --build
 ```
- >> cd backend
- >> npm install
- >> npm start
+
+Then open <http://localhost:3000>.
+
+The compose stack runs four services:
+- `db-init` — applies migrations and seeds the SQLite volume, then exits
+- `api` — Express API (depends on db-init)
+- `ml`  — recommendation service (depends on db-init)
+- `web` — Next.js frontend (depends on api)
+
+Data lives in the `sqlite-data` named volume so it survives container restarts.
+
+## Local Development (no Docker)
+
+Requires Node 20, pnpm 9, and Python 3.10+.
+
+```sh
+pnpm install
+pip install -r apps/ml/python/requirements.txt
+cp .env.example .env
+# Edit .env — set DATABASE_URL to an absolute path, see comment in the file
 ```
-2. Frontend
+
+First-time database setup:
+
+```sh
+pnpm db:migrate
+pnpm db:seed
 ```
- >> cd frontend
- >> npm install
- >> npm start
+
+Run all three apps in parallel:
+
+```sh
+pnpm dev
 ```
-3. Oracle 21c
- 
- Type this in Oracle SQL PLUS
- ```
- >> follow this article to setup database
-  https://www.oracle.com/database/technologies/appdev/quickstartnodeonprem.html
+
+| App | URL |
+|---|---|
+| web | <http://localhost:3000> |
+| api | <http://localhost:5000> |
+| ml  | <http://localhost:5001> |
+
+## Scripts
+
+| Script | Effect |
+|---|---|
+| `pnpm dev` | Run web, api, and ml in dev mode (parallel) |
+| `pnpm build` | Build all apps |
+| `pnpm typecheck` | TypeScript check across the monorepo |
+| `pnpm test` | Run all tests |
+| `pnpm db:generate` | Regenerate the Prisma client |
+| `pnpm db:migrate` | Create + apply a new migration |
+| `pnpm db:migrate:deploy` | Apply existing migrations (for production / Docker) |
+| `pnpm db:seed` | Seed SQLite from legacy JSON exports |
+| `pnpm db:studio` | Open Prisma Studio |
+
+## Environment Variables
+
+See `.env.example`. Notable ones:
+
+- `DATABASE_URL` — SQLite file. For local dev use an absolute path because Prisma resolves relative paths from the cwd of whichever app is running.
+- `JWT_SECRET` — required by the API (min 16 chars)
+- `TMDB_API_KEY` — required by the API
+- `NEXT_PUBLIC_API_URL` — base URL the web app calls (defaults to `http://localhost:5000`)
+- `ML_SERVICE_URL` — base URL the API uses to reach the ML server (defaults to `http://localhost:5001`)
+
+## Tests
+
+- `apps/api/tests/smoke.test.ts` — 8 supertest cases hitting a fresh SQLite DB
+- `apps/ml/tests/recommend.test.ts` — 2 integration tests that actually spawn Python
+
+```sh
+pnpm test
 ```
- After that, run the DDL, PROCEDURES, TRIGGERS, FUNCTIONS file to set up the database tables and relevant functions.
- 
- Also, if possible, import the data from [Table Backup](https://github.com/webgeekhabib007/StreamFlare/tree/master/Table%20Backup)
- 
- We used Navicat for connecting to Oracle, you're free to use anything else.
 
+## Original Project
 
-## Built With
-
-* [Node.js](https://nodejs.org/en/) - Backend environment
-* [Express](https://expressjs.com/) - Backend Server
-* [React](https://reactjs.org/) - Frontend Library
-* [Oracle 21c](https://www.oracle.com/database/technologies/oracle-database-software-downloads.html) - Database
-
-
-## Authors
-
-* **Habibur Rahman** - [webgeekhabib007](https://github.com/webgeekhabib007)
-* **Naieem Islam** - [Naieem-55](https://github.com/Naieem-55)
-
+The original Oracle/React/JavaScript codebase is preserved under [`legacy/`](./legacy/) for reference. The original README is at [`legacy/README.md`](./legacy/README.md).
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Our Project Supervisor:
-  Dola Das
-  (Assistant Professor, 
-  Dept. of CSE,
-  Khulna University of Engineering & Technology) 
-  
-* Stack Overflow
-* Developers who built Node.js & React
+MIT

@@ -1,0 +1,59 @@
+services:
+  db-init:
+    build:
+      context: .
+      dockerfile: docker/db-init.Dockerfile
+    environment:
+      DATABASE_URL: file:/data/streamflare.db
+      SEED_DATA_DIR: /seed-data
+    volumes:
+      - sqlite-data:/data
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      DATABASE_URL: file:/data/streamflare.db
+      JWT_SECRET: ${JWT_SECRET}
+      TMDB_API_KEY: ${TMDB_API_KEY}
+      ML_SERVICE_URL: http://ml:5001
+      PORT: 5000
+    volumes:
+      - sqlite-data:/data
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+
+  ml:
+    build:
+      context: .
+      dockerfile: docker/ml.Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      DATABASE_URL: file:/data/streamflare.db
+      PORT: 5001
+    volumes:
+      - sqlite-data:/data
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/web.Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:5000
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:5000
+    depends_on:
+      - api
+
+volumes:
+  sqlite-data:
