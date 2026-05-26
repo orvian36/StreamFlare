@@ -1,0 +1,17 @@
+node_modules
+.pnpm-store
+.turbo
+dist
+.next
+**/*.db
+**/*.db-journal
+.git
+.env
+.env.local
+.vscode
+.idea
+coverage
+*.log
+legacy/frontend/node_modules
+legacy/backend/node_modules
+legacy/ml_model_server/node_modules
