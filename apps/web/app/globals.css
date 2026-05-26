@@ -12,3 +12,21 @@ body {
 a {
   color: inherit;
 }
+
+/* Country dropdown (react-country-region-selector) */
+.country-dropdown-inner {
+  background: #333;
+  color: #fff;
+  height: 48px;
+  padding: 0 12px;
+  width: 100%;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.country-dropdown-inner option {
+  background: #333;
+  color: #fff;
+}
