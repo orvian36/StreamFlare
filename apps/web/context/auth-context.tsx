@@ -20,6 +20,7 @@ interface AuthContextValue {
   set_max_profiles: (mp: number) => void;
   set_num_profiles: (np: number) => void;
   set_ptbd: (d: number) => void;
+  set_profile: (id: string | null) => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -32,7 +33,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [max_profiles, set_MaxProfiles] = useState<number | null>(null);
   const [num_profiles, set_NumProfiles] = useState<number | null>(null);
   const [ptbd, set_PTBD] = useState<number | null>(null);
-  const [profile] = useState<string | null>(null);
+  const [profile, setProfile] = useState<string | null>(null);
 
   const login = useCallback((email: string, token: string) => {
     setEmail(email);
@@ -43,6 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(() => {
     setEmail(null);
     setToken(null);
+    setProfile(null);
     clearAuth();
   }, []);
 
@@ -65,6 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         set_max_profiles: set_MaxProfiles,
         set_num_profiles: set_NumProfiles,
         set_ptbd: set_PTBD,
+        set_profile: setProfile,
       }}
     >
       {children}

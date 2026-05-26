@@ -148,6 +148,9 @@ importers:
       '@streamflare/types':
         specifier: workspace:*
         version: link:../../packages/types
+      '@streamflare/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       axios:
         specifier: ^1.6.2
         version: 1.16.1
@@ -246,6 +249,34 @@ importers:
 
   packages/types:
     devDependencies:
+      typescript:
+        specifier: ^5.4.0
+        version: 5.9.3
+
+  packages/ui:
+    dependencies:
+      react:
+        specifier: ^18.3.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.0
+        version: 18.3.1(react@18.3.1)
+      react-player:
+        specifier: ^2.7.0
+        version: 2.16.1(react@18.3.1)
+      styled-components:
+        specifier: ^6.1.1
+        version: 6.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.3.0
+        version: 18.3.29
+      '@types/react-dom':
+        specifier: ^18.3.0
+        version: 18.3.7(@types/react@18.3.29)
+      next:
+        specifier: ^14.2.0
+        version: 14.2.35(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       typescript:
         specifier: ^5.4.0
         version: 5.9.3

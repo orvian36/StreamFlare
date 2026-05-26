@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { Box, Button, Container, Paper, TextField, Typography, Alert } from "@mui/material";
-import { api } from "../../lib/api-client";
-import { useAuth } from "../../context/auth-context";
-import * as ROUTES from "../../constants/routes";
+import React, { useState, type FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
+import { Header, Form } from '@streamflare/ui';
+import { api } from '../../lib/api-client';
+import { useAuth } from '../../context/auth-context';
+import * as ROUTES from '../../constants/routes';
+import { FooterContainer } from '../../containers/footer';
 
 interface LoginResponse {
   EMAIL: string;
@@ -32,40 +32,43 @@ interface BillResponse {
 export default function SignInPage() {
   const router = useRouter();
   const auth = useAuth();
-  const [emailAddress, setEmailAddress] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [emailAddress, setEmailAddress] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  const isInvalid = password === "" || emailAddress === "";
+  const isInvalid = password === '' || emailAddress === '';
 
-  async function handleSignin(event: FormEvent<HTMLFormElement>) {
+  const handleSignin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError("");
+    setError('');
     setSubmitting(true);
     try {
       const { data, status } = await api.post<LoginResponse>(
-        "/api/users/login",
+        '/api/users/login',
         { EMAIL: emailAddress, PASSWORD: password },
-        { validateStatus: () => true },
+        { validateStatus: () => true }
       );
 
       if (status === 422) {
-        setError("User does not exist. Please sign up instead");
+        setError('User does not exist. Please sign up instead');
+        setSubmitting(false);
         return;
       }
       if (status === 423) {
-        setError("Incorrect Password");
+        setError('Incorrect Password');
+        setSubmitting(false);
         return;
       }
       if (status !== 201) {
-        setError("Login failed");
+        setError('Login failed');
+        setSubmitting(false);
         return;
       }
 
       auth.login(emailAddress, data.token);
 
-      // Hydrate auth context with profile + subscription metadata, mirroring legacy flow.
+      // Hydrate auth context with profile + subscription metadata
       const mp = await api.get<MaxProfilesResponse>(`/api/users/maxprofiles/${emailAddress}`);
       auth.set_max_profiles(mp.data.mp.MAX_PROFILES);
 
@@ -76,8 +79,8 @@ export default function SignInPage() {
       if (sub.data.sub_id?.SUB_ID) {
         const subId = sub.data.sub_id.SUB_ID;
         auth.set_sub_id(subId);
-        const bill = await api.get<BillResponse>(`/api/subscription/bill/${subId}`);
-        auth.set_bill(bill.data.bill.BILL);
+        const billResponse = await api.get<BillResponse>(`/api/subscription/bill/${subId}`);
+        auth.set_bill(billResponse.data.bill.BILL);
         router.push(ROUTES.BROWSE);
       } else {
         router.push(ROUTES.ADD_SUBSCRIPTION);
@@ -87,60 +90,45 @@ export default function SignInPage() {
     } finally {
       setSubmitting(false);
     }
-  }
+  };
 
   return (
-    <Container maxWidth="xs" sx={{ mt: 8 }}>
-      <Paper elevation={3} sx={{ p: 4, background: "#141414", color: "#fff" }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Sign In
-        </Typography>
-        {error && (
-          <Alert severity="error" data-testid="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
-        )}
-        <Box component="form" onSubmit={handleSignin} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <TextField
-            label="Email address"
-            type="email"
-            value={emailAddress}
-            onChange={(e) => setEmailAddress(e.target.value)}
-            variant="filled"
-            fullWidth
-            required
-            InputProps={{ sx: { background: "#333", color: "#fff" } }}
-            InputLabelProps={{ sx: { color: "#aaa" } }}
-          />
-          <TextField
-            label="Password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            variant="filled"
-            fullWidth
-            required
-            InputProps={{ sx: { background: "#333", color: "#fff" } }}
-            InputLabelProps={{ sx: { color: "#aaa" } }}
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            color="error"
-            disabled={isInvalid || submitting}
-            data-testid="sign-in"
-            fullWidth
-          >
-            {submitting ? "Signing in..." : "Sign In"}
-          </Button>
-        </Box>
-        <Typography sx={{ mt: 3, color: "#aaa" }}>
-          New to StreamFlare?{" "}
-          <Link href={ROUTES.SIGN_UP} style={{ color: "#fff", textDecoration: "underline" }}>
-            Sign up now.
-          </Link>
-        </Typography>
-      </Paper>
-    </Container>
+    <>
+      <Header>
+        <Header.Frame>
+          <Header.Logo to={ROUTES.HOME} src="/images/logo.svg" alt="StreamFlare" />
+        </Header.Frame>
+
+        <Form>
+          <Form.Title>Sign In</Form.Title>
+          {error && <Form.Error data-testid="error">{error}</Form.Error>}
+
+          <Form.Base onSubmit={handleSignin} method="POST">
+            <Form.Input
+              placeholder="Email address"
+              type="email"
+              value={emailAddress}
+              onChange={(e) => setEmailAddress(e.target.value)}
+              required
+            />
+            <Form.Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <Form.Submit disabled={isInvalid || submitting} type="submit" data-testid="sign-in">
+              {submitting ? 'Signing in...' : 'Sign In'}
+            </Form.Submit>
+          </Form.Base>
+
+          <Form.Text>
+            New to StreamFlare? <Form.Link to={ROUTES.SIGN_UP}>Sign up now.</Form.Link>
+          </Form.Text>
+        </Form>
+      </Header>
+      <FooterContainer />
+    </>
   );
 }

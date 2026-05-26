@@ -1,54 +1,61 @@
-"use client";
+'use client';
 
-import { useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { CountryDropdown } from "react-country-region-selector";
-import {
-  Box,
-  Button,
-  Container,
-  Paper,
-  TextField,
-  Typography,
-  Alert,
-} from "@mui/material";
-import { api } from "../../lib/api-client";
-import { useAuth } from "../../context/auth-context";
-import * as ROUTES from "../../constants/routes";
+import React, { useState, type FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
+import { CountryDropdown } from 'react-country-region-selector';
+import styled from 'styled-components';
+import { Header, Form } from '@streamflare/ui';
+import { api } from '../../lib/api-client';
+import { useAuth } from '../../context/auth-context';
+import * as ROUTES from '../../constants/routes';
+import { FooterContainer } from '../../containers/footer';
 
 interface SignupResponse {
   EMAIL: string;
   token: string;
 }
 
+const CountrySelectContainer = styled.div`
+  select {
+    background: #333;
+    color: white;
+    height: 50px;
+    border-radius: 4px;
+    border: 0;
+    padding: 5px 20px;
+    fontSize: 16px;
+    width: 100%;
+    outline: none;
+  }
+`;
+
 export default function SignUpPage() {
   const router = useRouter();
   const auth = useAuth();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [dob, setDob] = useState("");
-  const [country, setCountry] = useState("");
-  const [creditCard, setCreditCard] = useState("");
-  const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
-  const [error, setError] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [dob, setDob] = useState('');
+  const [country, setCountry] = useState('');
+  const [creditCard, setCreditCard] = useState('');
+  const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
+  const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const isInvalid =
-    name === "" || email === "" || dob === "" || password === "" || creditCard === "" || phone === "";
+    name === '' || email === '' || dob === '' || password === '' || creditCard === '' || phone === '';
 
-  async function handleSignup(event: FormEvent<HTMLFormElement>) {
+  const handleSignup = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (password.length < 8) {
-      setError("Password should be at least 8 characters long");
+      setError('Password should be at least 8 characters long');
       return;
     }
-    setError("");
+    setError('');
     setSubmitting(true);
     try {
       const { data, status } = await api.post<SignupResponse>(
-        "/api/users/signup",
+        '/api/users/signup',
         {
           NAME: name,
           EMAIL: email,
@@ -58,19 +65,22 @@ export default function SignUpPage() {
           PASSWORD: password,
           PHONE: phone,
         },
-        { validateStatus: () => true },
+        { validateStatus: () => true }
       );
 
       if (status === 422) {
-        setError("Invalid user info");
+        setError('Invalid user info');
+        setSubmitting(false);
         return;
       }
       if (status === 423) {
-        setError("User already exists");
+        setError('User already exists');
+        setSubmitting(false);
         return;
       }
       if (status !== 201) {
-        setError("Signup failed");
+        setError('Signup failed');
+        setSubmitting(false);
         return;
       }
 
@@ -81,66 +91,88 @@ export default function SignUpPage() {
     } finally {
       setSubmitting(false);
     }
-  }
-
-  const fieldSx = {
-    InputProps: { sx: { background: "#333", color: "#fff" } },
-    InputLabelProps: { sx: { color: "#aaa" } },
   };
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 6, mb: 4 }}>
-      <Paper elevation={3} sx={{ p: 4, background: "#141414", color: "#fff" }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Sign Up
-        </Typography>
-        {error && (
-          <Alert severity="error" data-testid="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
-        )}
-        <Box component="form" onSubmit={handleSignup} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <TextField label="Name" value={name} onChange={(e) => setName(e.target.value)} variant="filled" fullWidth required {...fieldSx} />
-          <TextField label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} variant="filled" fullWidth required {...fieldSx} />
-          <TextField label="Password (min 8 chars)" type="password" value={password} onChange={(e) => setPassword(e.target.value)} variant="filled" fullWidth required {...fieldSx} />
-          <TextField label="Date of Birth" type="date" value={dob} onChange={(e) => setDob(e.target.value)} variant="filled" fullWidth required InputLabelProps={{ shrink: true, sx: { color: "#aaa" } }} InputProps={{ sx: { background: "#333", color: "#fff" } }} />
-          <TextField label="Credit Card No." value={creditCard} onChange={(e) => setCreditCard(e.target.value)} variant="filled" fullWidth required {...fieldSx} />
-          <TextField label="Phone Number" value={phone} onChange={(e) => setPhone(e.target.value)} variant="filled" fullWidth required {...fieldSx} />
-          <Box>
-            <Typography sx={{ mb: 1, color: "#aaa" }}>Country</Typography>
-            <div
-              style={{
-                background: "#333",
-                color: "white",
-                border: "1px solid #555",
-                borderRadius: 4,
-              }}
-            >
-              <CountryDropdown
-                value={country}
-                onChange={(val) => setCountry(val)}
-                classes="country-dropdown-inner"
+    <>
+      <Header>
+        <Header.Frame>
+          <Header.Logo to={ROUTES.HOME} src="/images/logo.svg" alt="StreamFlare" />
+        </Header.Frame>
+
+        <Form style={{ maxWidth: '600px', minHeight: 'auto' }}>
+          <Form.Title>Sign Up</Form.Title>
+          {error && <Form.Error data-testid="error">{error}</Form.Error>}
+
+          <Form.Base onSubmit={handleSignup} method="POST" style={{ maxWidth: '100%' }}>
+            <Form.Input
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+            <Form.Input
+              placeholder="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <Form.Input
+              type="password"
+              placeholder="Password (min 8 chars)"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            
+            <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px' }}>
+              <label htmlFor="dob" style={{ color: '#aaa', fontSize: '14px', marginBottom: '5px' }}>Date of Birth</label>
+              <Form.Input
+                type="date"
+                id="dob"
+                value={dob}
+                onChange={(e) => setDob(e.target.value)}
+                required
+                style={{ marginBottom: 0 }}
               />
             </div>
-          </Box>
-          <Button
-            type="submit"
-            variant="contained"
-            color="error"
-            disabled={isInvalid || submitting}
-            data-testid="sign-up"
-            fullWidth
-          >
-            {submitting ? "Creating account..." : "Sign Up"}
-          </Button>
-        </Box>
-        <Typography sx={{ mt: 3, color: "#aaa" }}>
-          Already a user?{" "}
-          <Link href={ROUTES.SIGN_IN} style={{ color: "#fff", textDecoration: "underline" }}>
-            Sign in now
-          </Link>
-        </Typography>
-      </Paper>
-    </Container>
+
+            <Form.Input
+              placeholder="Credit Card No."
+              value={creditCard}
+              onChange={(e) => setCreditCard(e.target.value)}
+              required
+            />
+
+            <Form.Input
+              placeholder="Phone Number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required
+            />
+
+            <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '30px' }}>
+              <label style={{ color: '#aaa', fontSize: '14px', marginBottom: '5px' }}>Country</label>
+              <CountrySelectContainer>
+                <CountryDropdown
+                  value={country}
+                  onChange={(val) => setCountry(val)}
+                />
+              </CountrySelectContainer>
+            </div>
+
+            <Form.Submit disabled={isInvalid || submitting} type="submit" data-testid="sign-up">
+              {submitting ? 'Creating account...' : 'Sign Up'}
+            </Form.Submit>
+          </Form.Base>
+
+          <Form.Text>
+            Already a user? <Form.Link to={ROUTES.SIGN_IN}>Sign in now</Form.Link>
+          </Form.Text>
+        </Form>
+      </Header>
+      <FooterContainer />
+    </>
   );
 }

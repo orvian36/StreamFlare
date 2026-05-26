@@ -1,12 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Box, Button, Card, CardActionArea, CardContent, Container, Grid, Typography } from "@mui/material";
-import { api } from "../../lib/api-client";
-import { useAuth } from "../../context/auth-context";
-import * as ROUTES from "../../constants/routes";
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Header, Profiles } from '@streamflare/ui';
+import { api } from '../../lib/api-client';
+import { useAuth } from '../../context/auth-context';
+import * as ROUTES from '../../constants/routes';
 
 interface Profile {
   PROFILE_ID: string;
@@ -20,63 +19,65 @@ export default function ProfilesPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!auth.email) return;
+    if (!auth.email) {
+      router.push(ROUTES.SIGN_IN);
+      return;
+    }
     api
       .get<{ profile: Profile[] }>(`/api/profiles/${auth.email}`)
-      .then((res) => setProfiles(res.data.profile ?? []))
+      .then((res) => {
+        const profileList = res.data.profile ?? [];
+        setProfiles(profileList);
+        auth.set_num_profiles(profileList.length);
+      })
+      .catch((err) => console.error(err))
       .finally(() => setLoading(false));
-  }, [auth.email]);
+  }, [auth.email, router]);
 
   function selectProfile(profileId: string) {
     const idx = profiles.findIndex((p) => p.PROFILE_ID === profileId);
-    if (idx >= 0) auth.set_ptbd(idx);
+    if (idx >= 0) {
+      auth.set_ptbd(idx);
+      auth.set_profile(profileId);
+    }
     router.push(ROUTES.BROWSE);
   }
 
   return (
-    <Container sx={{ mt: 4, color: "#fff" }} maxWidth="md">
-      <Typography variant="h4" align="center" sx={{ mb: 4 }}>
-        Who&apos;s watching?
-      </Typography>
+    <>
+      <Header bg={false}>
+        <Header.Frame>
+          <Header.Logo to={ROUTES.HOME} src="/images/logo.svg" alt="StreamFlare" />
+          {profiles.length < (auth.max_profiles ?? 0) ? (
+            <Header.ButtonLink to={ROUTES.CREATE_PROFILE}>Create Profile</Header.ButtonLink>
+          ) : (
+            <Header.ButtonLink
+              to={ROUTES.SIGN_IN}
+              onClick={() => {
+                auth.logout();
+              }}
+            >
+              Log Out
+            </Header.ButtonLink>
+          )}
+        </Header.Frame>
+      </Header>
 
-      {loading && <Typography align="center">Loading...</Typography>}
-
-      <Grid container spacing={3} justifyContent="center">
-        {profiles.map((p) => (
-          <Grid item key={p.PROFILE_ID} xs={6} sm={4} md={3}>
-            <Card sx={{ background: "#333", color: "#fff", cursor: "pointer" }}>
-              <CardActionArea onClick={() => selectProfile(p.PROFILE_ID)}>
-                <CardContent sx={{ textAlign: "center" }}>
-                  <Box
-                    sx={{
-                      width: 80,
-                      height: 80,
-                      borderRadius: "50%",
-                      background: "#e50914",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      mx: "auto",
-                      mb: 1,
-                      fontSize: 32,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {p.PROFILE_ID.charAt(0).toUpperCase()}
-                  </Box>
-                  <Typography variant="body1">{p.PROFILE_ID}</Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-
-      <Box sx={{ mt: 4, textAlign: "center" }}>
-        <Button variant="outlined" color="inherit" component={Link} href={ROUTES.CREATE_PROFILE}>
-          + Create Profile
-        </Button>
-      </Box>
-    </Container>
+      <Profiles>
+        <Profiles.Title>Who&apos;s watching?</Profiles.Title>
+        {loading ? (
+          <div style={{ textAlign: 'center', color: 'white', marginTop: '20px' }}>Loading...</div>
+        ) : (
+          <Profiles.List>
+            {profiles.map((p, index) => (
+              <Profiles.User key={p.PROFILE_ID} onClick={() => selectProfile(p.PROFILE_ID)}>
+                <Profiles.Picture src={(index + 1).toString()} />
+                <Profiles.Name>{p.PROFILE_ID}</Profiles.Name>
+              </Profiles.User>
+            ))}
+          </Profiles.List>
+        )}
+      </Profiles>
+    </>
   );
 }
