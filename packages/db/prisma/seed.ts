@@ -80,6 +80,7 @@ async function seedUsers() {
   if (!path) return console.log("  skip USER_NETFLIX (no JSON)");
   const rows = readJson(path);
   for (const r of rows) {
+    if (!r.EMAIL) continue;
     const data = {
       email: r.EMAIL,
       name: r.NAME ?? "",
