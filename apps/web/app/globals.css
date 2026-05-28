@@ -1,32 +1,24 @@
 @import "normalize.css";
 
+:root {
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html,
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: #000;
-  color: #fff;
+  background: oklch(0.17 0.012 265);
+  color: oklch(0.96 0.006 265);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 a {
   color: inherit;
-}
-
-/* Country dropdown (react-country-region-selector) */
-.country-dropdown-inner {
-  background: #333;
-  color: #fff;
-  height: 48px;
-  padding: 0 12px;
-  width: 100%;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.country-dropdown-inner option {
-  background: #333;
-  color: #fff;
 }
