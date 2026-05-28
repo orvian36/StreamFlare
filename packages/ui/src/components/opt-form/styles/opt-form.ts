@@ -1,24 +1,34 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
+export const Container = styled.form`
     display: flex;
-    justify-content: center;
-    height: 100%;
-    margin-top: 20px;
     flex-wrap: wrap;
-    @media (max-width: 1000px) {
+    gap: var(--sf-space-3);
+    margin-top: var(--sf-space-6);
+    max-width: 720px;
+    @media (max-width: 740px) {
         flex-direction: column;
-        align-items: center;
     }
 `;
 
 export const Input = styled.input`
-    max-width: 450px;
-    width: 100%;
-    border: 0;
-    padding: 10px;
-    height: 70px;
-    box-sizing: border-box;
+    flex: 1 1 320px;
+    min-width: 0;
+    background: var(--sf-surface-1);
+    color: var(--sf-text);
+    border: 1px solid var(--sf-line);
+    border-radius: 0;
+    padding: 0 var(--sf-space-4);
+    height: 64px;
+    font-family: var(--sf-font-body);
+    font-size: 16px;
+    &::placeholder {
+        color: var(--sf-text-dim);
+    }
+    &:focus-visible {
+        border-color: var(--sf-accent);
+        outline: none;
+    }
 `;
 
 export const Break = styled.div`
@@ -27,41 +37,38 @@ export const Break = styled.div`
 `;
 
 export const Button = styled.button`
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    height: 70px;
-    background: #e50914;
-    color: white;
+    gap: var(--sf-space-2);
+    height: 64px;
+    padding: 0 var(--sf-space-6);
+    background: var(--sf-accent);
+    color: var(--sf-accent-ink);
+    border: 2px solid var(--sf-accent);
+    border-radius: 0;
+    font-family: var(--sf-font-mono);
     text-transform: uppercase;
-    padding: 0 32px;
-    font-size: 26px;
-    border: 0;
+    letter-spacing: 0.08em;
+    font-size: 15px;
+    font-weight: 500;
     cursor: pointer;
-    img {
-        margin-left: 10px;
-        filter: brightness(0) invert(1);
-        width: 24px;
-        @media (max-width: 1000px) {
-            width: 16px;
-        }
+    white-space: nowrap;
+    transition: background var(--sf-dur-fast) var(--sf-ease), color var(--sf-dur-fast) var(--sf-ease);
+    svg {
+        width: 18px;
+        height: 18px;
     }
     &:hover {
-        background: #f40612;
-    }
-    @media (max-width: 1000px) {
-        height: 50px;
-        font-size: 16px;
-        margin-top: 20px;
-        font-weight: bold;
+        background: transparent;
+        color: var(--sf-accent);
     }
 `;
 
 export const Text = styled.p`
-    font-size: 19.2px;
-    color: white;
-    text-align: center;
-    @media (max-width: 600px) {
-        font-size: 16px;
-        line-height: 22px;
-    }
+    flex-basis: 100%;
+    color: var(--sf-text-dim);
+    font-family: var(--sf-font-mono);
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    margin: var(--sf-space-3) 0 0;
 `;
