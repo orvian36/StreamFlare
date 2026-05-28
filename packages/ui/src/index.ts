@@ -12,3 +12,4 @@ export { default as Card } from './components/card';
 export { default as Header } from './components/header';
 export { default as Header2 } from './components/header2';
 export { GlobalStyle } from './styles/global';
+export { default as Button } from './components/button';
