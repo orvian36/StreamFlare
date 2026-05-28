@@ -11,3 +11,4 @@ export { default as Player } from './components/player';
 export { default as Card } from './components/card';
 export { default as Header } from './components/header';
 export { default as Header2 } from './components/header2';
+export { GlobalStyle } from './styles/global';
