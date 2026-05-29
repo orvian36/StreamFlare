@@ -1,0 +1,140 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* Scan the app + this package for class usage (monorepo). Paths are relative
+   to this file (packages/ui/src/styles/globals.css). */
+@source "../../../../apps/web";
+@source "../../";
+
+/* ---- Aurora Noir tokens (dark-only) ---------------------------------- */
+:root {
+  /* surfaces (cool blue-violet near-black, hue ~274) */
+  --sf-canvas: oklch(0.16 0.015 274);
+  --sf-surface-1: oklch(0.20 0.018 274);
+  --sf-surface-2: oklch(0.24 0.020 274);
+  --sf-surface-3: oklch(0.28 0.022 274);
+  --sf-overlay: oklch(0.12 0.015 274);
+  --sf-hairline: oklch(0.30 0.018 274);
+  --sf-line-strong: oklch(0.38 0.020 274);
+
+  /* text */
+  --sf-text: oklch(0.97 0.005 274);
+  --sf-text-muted: oklch(0.76 0.012 274);
+  --sf-text-subtle: oklch(0.60 0.012 274);
+
+  /* brand accent (indigo -> cyan) */
+  --sf-accent: oklch(0.68 0.170 274);
+  --sf-accent-hover: oklch(0.72 0.170 274);
+  --sf-accent-2: oklch(0.80 0.130 210);
+  --sf-accent-ink: oklch(0.16 0.020 274);
+
+  /* semantic */
+  --sf-success: oklch(0.72 0.150 155);
+  --sf-warning: oklch(0.80 0.130 85);
+  --sf-danger: oklch(0.62 0.200 22);
+  --sf-danger-ink: oklch(0.98 0.010 22);
+
+  /* radii */
+  --radius: 0.625rem;
+
+  /* shadcn semantic vars -> Aurora Noir */
+  --background: var(--sf-canvas);
+  --foreground: var(--sf-text);
+  --card: var(--sf-surface-2);
+  --card-foreground: var(--sf-text);
+  --popover: var(--sf-surface-3);
+  --popover-foreground: var(--sf-text);
+  --primary: var(--sf-accent);
+  --primary-foreground: var(--sf-accent-ink);
+  --secondary: var(--sf-surface-1);
+  --secondary-foreground: var(--sf-text);
+  --muted: var(--sf-surface-1);
+  --muted-foreground: var(--sf-text-muted);
+  --accent: var(--sf-surface-3);
+  --accent-foreground: var(--sf-text);
+  --destructive: var(--sf-danger);
+  --destructive-foreground: var(--sf-danger-ink);
+  --border: var(--sf-hairline);
+  --input: var(--sf-hairline);
+  --ring: var(--sf-accent);
+  --chart-1: oklch(0.68 0.170 274);
+  --chart-2: oklch(0.80 0.130 210);
+  --chart-3: oklch(0.72 0.150 155);
+  --chart-4: oklch(0.74 0.150 320);
+  --chart-5: oklch(0.80 0.130 85);
+}
+
+/* ---- Map tokens into the Tailwind theme ------------------------------ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* brand utilities: bg-canvas, text-muted, bg-brand, from-brand to-brand-2 */
+  --color-canvas: var(--sf-canvas);
+  --color-surface-1: var(--sf-surface-1);
+  --color-surface-2: var(--sf-surface-2);
+  --color-surface-3: var(--sf-surface-3);
+  --color-hairline: var(--sf-hairline);
+  --color-line-strong: var(--sf-line-strong);
+  --color-text: var(--sf-text);
+  --color-text-muted: var(--sf-text-muted);
+  --color-text-subtle: var(--sf-text-subtle);
+  --color-brand: var(--sf-accent);
+  --color-brand-2: var(--sf-accent-2);
+  --color-success: var(--sf-success);
+  --color-warning: var(--sf-warning);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 6px);
+
+  --font-display: var(--font-display);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-mono);
+
+  --ease-fluid: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---- Base layer (reference emitted :root vars, not @theme-inline names) -- */
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  }
+  /* faint grain to avoid flat banding on dark gradients */
+  .sf-grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
