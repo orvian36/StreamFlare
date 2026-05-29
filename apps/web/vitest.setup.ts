@@ -14,3 +14,10 @@ if (!("ResizeObserver" in globalThis)) {
 if (!Element.prototype.scrollIntoView) {
   Element.prototype.scrollIntoView = function scrollIntoView() {};
 }
+
+// jsdom does not implement media playback.
+if (typeof window !== "undefined") {
+  window.HTMLMediaElement.prototype.play = function play() { return Promise.resolve(); };
+  window.HTMLMediaElement.prototype.pause = function pause() {};
+  window.HTMLMediaElement.prototype.load = function load() {};
+}
