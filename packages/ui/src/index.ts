@@ -31,4 +31,5 @@ export { PosterCard } from './components/brand/poster-card';
 export { ContentRow } from './components/brand/content-row';
 export { HeroBackdrop } from './components/brand/hero-backdrop';
 export { EmptyState } from './components/brand/empty-state';
+export { ProfileAvatar } from './components/brand/profile-avatar';
 export { CountryCombobox } from './components/forms/country-combobox';
