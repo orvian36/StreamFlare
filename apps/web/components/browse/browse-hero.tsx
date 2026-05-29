@@ -21,7 +21,7 @@ export function BrowseHero({ item }: { item: BrowseItem }) {
           </div>
           {item.DESCRIPTION ? <p className="line-clamp-3 max-w-xl text-text-muted">{item.DESCRIPTION}</p> : null}
           <div className="flex flex-wrap gap-3">
-            <Link href={`/watch/${id ?? ""}`}><GlowButton size="lg"><Play className="size-5" /> Play</GlowButton></Link>
+            <Link href={`/watch/${itemType(item)}/${id ?? ""}`}><GlowButton size="lg"><Play className="size-5" /> Play</GlowButton></Link>
             <Link href={`/title/${itemType(item)}/${id ?? ""}`}><GlowButton variant="glass" size="lg"><Info className="size-5" /> More info</GlowButton></Link>
           </div>
         </FadeIn>

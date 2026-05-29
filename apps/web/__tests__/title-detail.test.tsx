@@ -22,6 +22,6 @@ describe("TitleDetail", () => {
     expect(await screen.findByRole("heading", { name: "Joker", level: 1 })).toBeInTheDocument();
     expect(await screen.findByText("Joaquin Phoenix")).toBeInTheDocument();
     expect(screen.getByText("Thriller")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /play/i })).toHaveAttribute("href", "/watch/7");
+    expect(screen.getByRole("link", { name: /play/i })).toHaveAttribute("href", "/watch/movie/7");
   });
 });

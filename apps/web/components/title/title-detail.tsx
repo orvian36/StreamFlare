@@ -110,7 +110,7 @@ export function TitleDetail({ type, id }: { type: TitleType; id: number }) {
             ) : null}
             {detail.description ? <p className="line-clamp-3 max-w-xl text-text-muted">{detail.description}</p> : null}
             <div className="flex flex-wrap items-center gap-3">
-              <Link href={`/watch/${id}`}><GlowButton size="lg"><Play className="size-5" /> Play</GlowButton></Link>
+              <Link href={`/watch/${type}/${id}`}><GlowButton size="lg"><Play className="size-5" /> Play</GlowButton></Link>
               <GlowButton variant="glass" size="lg" onClick={toggleList}>
                 {inList ? <Check className="size-5" /> : <Plus className="size-5" />} My List
               </GlowButton>
@@ -121,7 +121,7 @@ export function TitleDetail({ type, id }: { type: TitleType; id: number }) {
 
         <CastList cast={cast} />
 
-        {type === "show" && episodes.length > 0 ? <EpisodeList seasons={episodes} /> : null}
+        {type === "show" && episodes.length > 0 ? <EpisodeList seasons={episodes} showId={id} /> : null}
 
         {similar.length > 0 ? (
           <ContentRow title="More like this">

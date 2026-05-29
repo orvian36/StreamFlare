@@ -1,10 +1,11 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { cn } from "@streamflare/ui/lib/utils";
 import { posterUrl, type SlideItem } from "../../lib/browse-data";
 
-export function EpisodeList({ seasons }: { seasons: SlideItem[] }) {
+export function EpisodeList({ seasons, showId }: { seasons: SlideItem[]; showId: number }) {
   const [active, setActive] = React.useState(0);
   if (seasons.length === 0) return null;
   const current = seasons[active] ?? seasons[0]!;
@@ -28,17 +29,22 @@ export function EpisodeList({ seasons }: { seasons: SlideItem[] }) {
       </div>
       <ul className="space-y-3">
         {current.data.map((ep, i) => (
-          <li key={`${ep.SEASON_NO}-${ep.EPISODE_NO}-${i}`} className="flex gap-4 rounded-lg border border-hairline bg-surface-1 p-3">
-            <div className="aspect-video w-40 shrink-0 overflow-hidden rounded-md bg-surface-2">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={posterUrl(ep.IMAGE_URL)} alt={ep.TITLE} loading="lazy" className="h-full w-full object-cover" />
-            </div>
-            <div className="min-w-0">
-              <p className="font-medium text-text">
-                {ep.EPISODE_NO ? `${ep.EPISODE_NO}. ` : ""}{ep.TITLE}
-              </p>
-              {ep.DESCRIPTION ? <p className="line-clamp-2 text-sm text-text-muted">{ep.DESCRIPTION}</p> : null}
-            </div>
+          <li key={`${ep.SEASON_NO}-${ep.EPISODE_NO}-${i}`} className="overflow-hidden rounded-lg border border-hairline bg-surface-1">
+            <Link
+              href={`/watch/show/${showId}?s=${ep.SEASON_NO}&e=${ep.EPISODE_NO}`}
+              className="flex gap-4 p-3 transition-colors hover:bg-surface-2"
+            >
+              <div className="aspect-video w-40 shrink-0 overflow-hidden rounded-md bg-surface-2">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={posterUrl(ep.IMAGE_URL)} alt={ep.TITLE} loading="lazy" className="h-full w-full object-cover" />
+              </div>
+              <div className="min-w-0">
+                <p className="font-medium text-text">
+                  {ep.EPISODE_NO ? `${ep.EPISODE_NO}. ` : ""}{ep.TITLE}
+                </p>
+                {ep.DESCRIPTION ? <p className="line-clamp-2 text-sm text-text-muted">{ep.DESCRIPTION}</p> : null}
+              </div>
+            </Link>
           </li>
         ))}
       </ul>
