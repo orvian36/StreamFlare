@@ -12,7 +12,7 @@ import {
 import { useAuth } from "../../context/auth-context";
 import * as ROUTES from "../../constants/routes";
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+export function AppShell({ children, nav }: { children: React.ReactNode; nav?: React.ReactNode }) {
   const auth = useAuth();
   const router = useRouter();
 
@@ -25,8 +25,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-dvh bg-canvas">
       <header className="sticky top-0 z-40 border-b border-hairline bg-canvas/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3 md:px-10">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-3 md:px-10">
           <Link href={ROUTES.BROWSE} aria-label="StreamFlare home"><Wordmark /></Link>
+          {nav ? <div className="hidden flex-1 justify-center md:flex">{nav}</div> : null}
           <DropdownMenu>
             <DropdownMenuTrigger
               aria-label="Account menu"

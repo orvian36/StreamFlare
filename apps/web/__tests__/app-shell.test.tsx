@@ -17,6 +17,11 @@ describe("AppShell", () => {
     expect(screen.getByText("content here")).toBeInTheDocument();
   });
 
+  it("renders a provided nav slot", () => {
+    render(<AppShell nav={<span>BROWSENAV</span>}><p>c</p></AppShell>);
+    expect(screen.getByText("BROWSENAV")).toBeInTheDocument();
+  });
+
   it("redirects to /signin when unauthenticated", async () => {
     authValue = { email: null, profile: null, logout: vi.fn() };
     render(<AppShell><p>x</p></AppShell>);
