@@ -9,9 +9,15 @@ loadDotenv({ path: resolve(__dirname, "../../.env"), override: false });
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "standalone",
+  // `standalone` is required by the Docker image (docker/web.Dockerfile copies
+  // .next/standalone). It is skipped when NEXT_DISABLE_STANDALONE is set so local
+  // builds on Windows don't hit EPERM creating symlinks without admin/Developer Mode.
+  output: process.env.NEXT_DISABLE_STANDALONE ? undefined : "standalone",
   reactStrictMode: true,
-  transpilePackages: ["@streamflare/types"],
+  transpilePackages: ["@streamflare/types", "@streamflare/ui"],
+  compiler: {
+    styledComponents: true,
+  },
 };
 
 export default nextConfig;

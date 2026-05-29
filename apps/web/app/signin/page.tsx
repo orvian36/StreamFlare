@@ -2,7 +2,7 @@
 
 import React, { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { Header, Form } from '@streamflare/ui';
+import { Header, Form, Field } from '@streamflare/ui';
 import { api } from '../../lib/api-client';
 import { useAuth } from '../../context/auth-context';
 import * as ROUTES from '../../constants/routes';
@@ -68,7 +68,6 @@ export default function SignInPage() {
 
       auth.login(emailAddress, data.token);
 
-      // Hydrate auth context with profile + subscription metadata
       const mp = await api.get<MaxProfilesResponse>(`/api/users/maxprofiles/${emailAddress}`);
       auth.set_max_profiles(mp.data.mp.MAX_PROFILES);
 
@@ -104,16 +103,18 @@ export default function SignInPage() {
           {error && <Form.Error data-testid="error">{error}</Form.Error>}
 
           <Form.Base onSubmit={handleSignin} method="POST">
-            <Form.Input
-              placeholder="Email address"
+            <Field
+              label="Email address"
               type="email"
+              autoComplete="email"
               value={emailAddress}
               onChange={(e) => setEmailAddress(e.target.value)}
               required
             />
-            <Form.Input
+            <Field
+              label="Password"
               type="password"
-              placeholder="Password"
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required

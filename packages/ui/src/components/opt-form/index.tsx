@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Input, Break, Button, Text } from './styles/opt-form';
 
-export default function OptForm({ children, ...restProps }: React.HTMLAttributes<HTMLDivElement>) {
+export default function OptForm({ children, ...restProps }: React.FormHTMLAttributes<HTMLFormElement>) {
     return <Container {...restProps}>{children}</Container>;
 }
 
@@ -13,7 +13,9 @@ OptForm.Button = function OptFormButton({ children, ...restProps }: React.Button
     return (
         <Button {...restProps}>
             {children}
-            <img src="/images/icons/chevron-right.png" alt="Try Now" />
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+            </svg>
         </Button>
     );
 };

@@ -4,55 +4,69 @@ import Link from 'next/link';
 export const Container = styled.div`
     display: flex;
     flex-direction: column;
-    min-height: 660px;
-    background-color: rgba(0, 0, 0, 0.75);
-    border-radius: 5px;
-    box-sizing: border-box;
     width: 100%;
-    margin: auto;
-    max-width: 450px;
-    padding: 60px 68px 40px;
-    margin-bottom: 100px;
+    max-width: 460px;
+    margin: var(--sf-space-9) auto var(--sf-space-10);
+    padding: var(--sf-space-8) var(--sf-space-7);
+    background: var(--sf-surface-1);
+    border: 1px solid var(--sf-line);
+    box-sizing: border-box;
+    @media (max-width: 520px) {
+        padding: var(--sf-space-6) var(--sf-space-5);
+    }
 `;
 
 export const Error = styled.div`
-    background: #e87c03;
-    border-radius: 4px;
-    font-size: 14px;
-    margin: 0 0 16px;
-    color: white;
-    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: var(--sf-space-2);
+    background: transparent;
+    border: 1px solid var(--sf-danger);
+    color: var(--sf-text);
+    font-family: var(--sf-font-mono);
+    font-size: 13px;
+    padding: var(--sf-space-3) var(--sf-space-4);
+    margin-bottom: var(--sf-space-5);
+    &::before {
+        content: '!';
+        color: var(--sf-danger);
+        font-weight: 700;
+    }
 `;
 
 export const Base = styled.form`
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 320px;
 `;
 
 export const Title = styled.h1`
-    color: #fff;
-    font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 28px;
+    font-family: var(--sf-font-display);
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--sf-text);
+    font-size: 40px;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin: 0 0 var(--sf-space-6);
 `;
 
 export const Text = styled.p`
-    color: #737373;
-    font-size: 16px;
-    font-weight: 500;
+    color: var(--sf-text-dim);
+    font-family: var(--sf-font-mono);
+    font-size: 13px;
+    margin-top: var(--sf-space-5);
 `;
 
 export const TextSmall = styled.p`
-    margin-top: 10px;
-    font-size: 13px;
-    line-height: normal;
-    color: #8c8c8c;
+    margin-top: var(--sf-space-3);
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--sf-text-dim);
 `;
 
 export const LinkRoute = styled(Link)`
-    color: white;
+    color: var(--sf-accent);
     text-decoration: none;
     &:hover {
         text-decoration: underline;
@@ -60,30 +74,44 @@ export const LinkRoute = styled(Link)`
 `;
 
 export const Input = styled.input`
-    background: #333;
-    border-radius: 4px;
-    border: 0;
-    color: white;
-    height: 50px;
-    line-height: 50px;
-    padding: 5px 20px;
-    margin-bottom: 20px;
-    &:last-of-type {
-        margin-bottom: 30px;
+    background: var(--sf-surface-2);
+    color: var(--sf-text);
+    border: 1px solid var(--sf-line);
+    border-radius: 0;
+    height: 52px;
+    padding: 0 var(--sf-space-4);
+    margin-bottom: var(--sf-space-4);
+    font-family: var(--sf-font-body);
+    font-size: 16px;
+    &::placeholder {
+        color: var(--sf-text-dim);
+    }
+    &:focus-visible {
+        border-color: var(--sf-accent);
+        outline: none;
     }
 `;
 
 export const Submit = styled.button`
-    background: #e50914;
-    border-radius: 4px;
-    font-size: 16px;
-    font-weight: bold;
-    margin: 24px 0 12px;
+    font-family: var(--sf-font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: var(--sf-accent);
+    color: var(--sf-accent-ink);
+    border: 2px solid var(--sf-accent);
+    border-radius: 0;
+    font-size: 15px;
+    font-weight: 500;
     padding: 16px;
-    border: 0;
-    color: white;
+    margin: var(--sf-space-4) 0 var(--sf-space-2);
     cursor: pointer;
+    transition: background var(--sf-dur-fast) var(--sf-ease), color var(--sf-dur-fast) var(--sf-ease);
+    &:hover:not(:disabled) {
+        background: transparent;
+        color: var(--sf-accent);
+    }
     &:disabled {
-        opacity: 0.5;
+        opacity: 0.4;
+        cursor: not-allowed;
     }
 `;

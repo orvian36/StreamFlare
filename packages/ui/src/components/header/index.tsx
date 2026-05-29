@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-    Background, Container, LinkRoute, Logo, ButtonLink, Group, TextLink,
+    Background, Container, LinkRoute, Wordmark, ButtonLink, Group, TextLink,
     Search, SearchInput, Picture, Dropdown, Profile, Feature, FeatureCallOut, Text, PlayButton
 } from './styles/header';
 
@@ -27,8 +27,8 @@ interface HeaderLogoProps {
 
 Header.Logo = function HeaderLogo({ to, src, alt, ...restProps }: HeaderLogoProps) {
     return (
-        <LinkRoute href={to} {...restProps}>
-            <Logo src={src} alt={alt} />
+        <LinkRoute href={to} aria-label="StreamFlare home" {...restProps}>
+            <Wordmark>STREAMFLARE</Wordmark>
         </LinkRoute>
     );
 };

@@ -4,7 +4,7 @@ import React, { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { CountryDropdown } from 'react-country-region-selector';
 import styled from 'styled-components';
-import { Header, Form } from '@streamflare/ui';
+import { Header, Form, Field } from '@streamflare/ui';
 import { api } from '../../lib/api-client';
 import { useAuth } from '../../context/auth-context';
 import * as ROUTES from '../../constants/routes';
@@ -15,17 +15,34 @@ interface SignupResponse {
   token: string;
 }
 
-const CountrySelectContainer = styled.div`
+const FieldLabel = styled.label`
+  display: block;
+  font-family: var(--sf-font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 12px;
+  color: var(--sf-text-dim);
+  margin-bottom: var(--sf-space-2);
+`;
+
+const CountryBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--sf-space-4);
   select {
-    background: #333;
-    color: white;
-    height: 50px;
-    border-radius: 4px;
-    border: 0;
-    padding: 5px 20px;
-    fontSize: 16px;
+    background: var(--sf-surface-2);
+    color: var(--sf-text);
+    height: 52px;
+    border: 1px solid var(--sf-line);
+    border-radius: 0;
+    padding: 0 var(--sf-space-4);
+    font-family: var(--sf-font-body);
+    font-size: 16px;
     width: 100%;
     outline: none;
+  }
+  select:focus-visible {
+    border-color: var(--sf-accent);
   }
 `;
 
@@ -100,67 +117,55 @@ export default function SignUpPage() {
           <Header.Logo to={ROUTES.HOME} src="/images/logo.svg" alt="StreamFlare" />
         </Header.Frame>
 
-        <Form style={{ maxWidth: '600px', minHeight: 'auto' }}>
+        <Form style={{ maxWidth: '600px' }}>
           <Form.Title>Sign Up</Form.Title>
           {error && <Form.Error data-testid="error">{error}</Form.Error>}
 
-          <Form.Base onSubmit={handleSignup} method="POST" style={{ maxWidth: '100%' }}>
-            <Form.Input
-              placeholder="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-            <Form.Input
-              placeholder="Email"
+          <Form.Base onSubmit={handleSignup} method="POST">
+            <Field label="Name" value={name} onChange={(e) => setName(e.target.value)} required />
+            <Field
+              label="Email"
               type="email"
+              autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <Form.Input
+            <Field
+              label="Password"
               type="password"
-              placeholder="Password (min 8 chars)"
+              autoComplete="new-password"
+              helper="At least 8 characters"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            
-            <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px' }}>
-              <label htmlFor="dob" style={{ color: '#aaa', fontSize: '14px', marginBottom: '5px' }}>Date of Birth</label>
-              <Form.Input
-                type="date"
-                id="dob"
-                value={dob}
-                onChange={(e) => setDob(e.target.value)}
-                required
-                style={{ marginBottom: 0 }}
-              />
-            </div>
-
-            <Form.Input
-              placeholder="Credit Card No."
+            <Field
+              label="Date of Birth"
+              type="date"
+              value={dob}
+              onChange={(e) => setDob(e.target.value)}
+              required
+            />
+            <Field
+              label="Credit Card No."
+              inputMode="numeric"
               value={creditCard}
               onChange={(e) => setCreditCard(e.target.value)}
               required
             />
-
-            <Form.Input
-              placeholder="Phone Number"
+            <Field
+              label="Phone Number"
+              type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               required
             />
 
-            <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '30px' }}>
-              <label style={{ color: '#aaa', fontSize: '14px', marginBottom: '5px' }}>Country</label>
-              <CountrySelectContainer>
-                <CountryDropdown
-                  value={country}
-                  onChange={(val) => setCountry(val)}
-                />
-              </CountrySelectContainer>
-            </div>
+            <CountryBlock>
+              <FieldLabel htmlFor="country">Country</FieldLabel>
+              <CountryDropdown value={country} onChange={(val) => setCountry(val)} />
+            </CountryBlock>
 
             <Form.Submit disabled={isInvalid || submitting} type="submit" data-testid="sign-up">
               {submitting ? 'Creating account...' : 'Sign Up'}
