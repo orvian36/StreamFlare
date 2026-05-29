@@ -1,4 +1,4 @@
-import { FadeIn } from "@streamflare/ui";
+import { FadeIn } from "@streamflare/ui/motion";
 import { cn } from "@streamflare/ui/lib/utils";
 
 export interface FeaturePanelProps {

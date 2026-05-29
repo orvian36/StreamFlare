@@ -1,4 +1,4 @@
-import { Wordmark } from "@streamflare/ui";
+import { Wordmark } from "@streamflare/ui/components/brand/wordmark";
 
 const COLUMNS: { heading: string; links: string[] }[] = [
   { heading: "Watch", links: ["FAQ", "Ways to Watch", "Originals", "New & Popular"] },

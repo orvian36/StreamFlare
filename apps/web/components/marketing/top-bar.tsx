@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Wordmark, GlowButton } from "@streamflare/ui";
+import { Wordmark } from "@streamflare/ui/components/brand/wordmark";
+import { GlowButton } from "@streamflare/ui/components/brand/glow-button";
 import { cn } from "@streamflare/ui/lib/utils";
 
 export function TopBar() {

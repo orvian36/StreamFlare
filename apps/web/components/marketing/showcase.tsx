@@ -1,4 +1,5 @@
-import { ContentRow, PosterCard } from "@streamflare/ui";
+import { ContentRow } from "@streamflare/ui/components/brand/content-row";
+import { PosterCard } from "@streamflare/ui/components/brand/poster-card";
 import trending from "../../fixtures/trending.json";
 
 export function Showcase() {

@@ -2,7 +2,9 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { HeroBackdrop, GlowButton, FadeIn } from "@streamflare/ui";
+import { HeroBackdrop } from "@streamflare/ui/components/brand/hero-backdrop";
+import { GlowButton } from "@streamflare/ui/components/brand/glow-button";
+import { FadeIn } from "@streamflare/ui/motion";
 import { Input } from "@streamflare/ui/components/ui/input";
 
 export function Hero() {

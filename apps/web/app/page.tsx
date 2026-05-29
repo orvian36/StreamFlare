@@ -1,93 +1,21 @@
-'use client';
-
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Header, Feature, OptForm, Jumbotron, Accordion, Section, Tag } from '@streamflare/ui';
-import * as ROUTES from '../constants/routes';
-import { FooterContainer } from '../containers/footer';
-import jumboData from '../fixtures/jumbo.json';
-import faqsData from '../fixtures/faqs.json';
+import { TopBar } from "../components/marketing/top-bar";
+import { Hero } from "../components/marketing/hero";
+import { Showcase } from "../components/marketing/showcase";
+import { WhySection } from "../components/marketing/why-section";
+import { Faq } from "../components/marketing/faq";
+import { SiteFooter } from "../components/marketing/site-footer";
 
 export default function HomePage() {
-  const router = useRouter();
-  const [emailInput, setEmailInput] = useState('');
-
-  const handleGetStarted = (e: React.FormEvent) => {
-    e.preventDefault();
-    router.push(`${ROUTES.SIGN_UP}?email=${encodeURIComponent(emailInput)}`);
-  };
-
   return (
     <>
-      <Header>
-        <Header.Frame>
-          <Header.Logo to={ROUTES.HOME} src="/images/logo.svg" alt="StreamFlare" />
-          <Header.ButtonLink to={ROUTES.SIGN_IN}>Sign In</Header.ButtonLink>
-        </Header.Frame>
-        <Feature>
-          <Tag accent style={{ marginBottom: 'var(--sf-space-4)' }}>Now Streaming</Tag>
-          <Feature.Title>Unlimited films, TV programmes and more.</Feature.Title>
-          <Feature.SubTitle>Watch anywhere. Cancel anytime.</Feature.SubTitle>
-          <OptForm onSubmit={handleGetStarted}>
-            <OptForm.Input
-              placeholder="Email address"
-              type="email"
-              value={emailInput}
-              onChange={(e) => setEmailInput(e.target.value)}
-            />
-            <OptForm.Button type="submit">Try it now</OptForm.Button>
-            <OptForm.Break />
-            <OptForm.Text>
-              Ready to watch? Enter your email to create or restart your membership.
-            </OptForm.Text>
-          </OptForm>
-        </Feature>
-      </Header>
-
-      <Section index="01" label="Why StreamFlare">
-        <Jumbotron.Container>
-          {jumboData.map((item) => (
-            <Jumbotron key={item.id} direction={item.direction}>
-              <Jumbotron.Pane>
-                <Jumbotron.Title>{item.title}</Jumbotron.Title>
-                <Jumbotron.SubTitle>{item.subTitle}</Jumbotron.SubTitle>
-              </Jumbotron.Pane>
-              <Jumbotron.Pane>
-                <Jumbotron.Image src={item.image} alt={item.alt} />
-              </Jumbotron.Pane>
-            </Jumbotron>
-          ))}
-        </Jumbotron.Container>
-      </Section>
-
-      <Section index="02" label="FAQ">
-        <Accordion>
-          <Accordion.Title>Frequently Asked Questions</Accordion.Title>
-          <Accordion.Frame>
-            {faqsData.map((item) => (
-              <Accordion.Item key={item.id}>
-                <Accordion.Header>{item.header}</Accordion.Header>
-                <Accordion.Body>{item.body}</Accordion.Body>
-              </Accordion.Item>
-            ))}
-          </Accordion.Frame>
-          <OptForm onSubmit={handleGetStarted}>
-            <OptForm.Input
-              placeholder="Email address"
-              type="email"
-              value={emailInput}
-              onChange={(e) => setEmailInput(e.target.value)}
-            />
-            <OptForm.Button type="submit">Try it now</OptForm.Button>
-            <OptForm.Break />
-            <OptForm.Text>
-              Ready to watch? Enter your email to create or restart your membership.
-            </OptForm.Text>
-          </OptForm>
-        </Accordion>
-      </Section>
-
-      <FooterContainer />
+      <TopBar />
+      <main>
+        <Hero />
+        <Showcase />
+        <WhySection />
+        <Faq />
+      </main>
+      <SiteFooter />
     </>
   );
 }

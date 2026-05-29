@@ -1,4 +1,4 @@
-import { SectionHeader } from "@streamflare/ui";
+import { SectionHeader } from "@streamflare/ui/components/brand/section-header";
 import { FeaturePanel } from "./feature-panel";
 import jumbo from "../../fixtures/jumbo.json";
 

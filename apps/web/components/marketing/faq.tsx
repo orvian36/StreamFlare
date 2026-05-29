@@ -1,6 +1,6 @@
 "use client";
 
-import { SectionHeader } from "@streamflare/ui";
+import { SectionHeader } from "@streamflare/ui/components/brand/section-header";
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from "@streamflare/ui/components/ui/accordion";
