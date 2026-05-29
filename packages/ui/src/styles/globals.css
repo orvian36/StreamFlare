@@ -62,6 +62,35 @@
   --chart-3: oklch(0.72 0.150 155);
   --chart-4: oklch(0.74 0.150 320);
   --chart-5: oklch(0.80 0.130 85);
+
+  /* ---- Legacy --sf-* compatibility ------------------------------------
+     The pre-existing styled-components ("brutalist") UI reads these token
+     names. Aliasing them to Aurora values makes those not-yet-migrated pages
+     re-skin to Aurora instead of breaking, and keeps a single source of truth
+     for --sf-* here (the styled GlobalStyle is retired). */
+  --sf-line: var(--sf-hairline);
+  --sf-text-dim: var(--sf-text-muted);
+  --sf-ok: var(--sf-success);
+  --sf-font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  --sf-font-body: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --sf-font-mono: var(--font-mono), ui-monospace, monospace;
+  --sf-space-1: 4px;
+  --sf-space-2: 8px;
+  --sf-space-3: 12px;
+  --sf-space-4: 16px;
+  --sf-space-5: 24px;
+  --sf-space-6: 32px;
+  --sf-space-7: 48px;
+  --sf-space-8: 64px;
+  --sf-space-9: 96px;
+  --sf-space-10: 160px;
+  --sf-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --sf-dur: 240ms;
+  --sf-dur-fast: 180ms;
+  --sf-z-header: 10;
+  --sf-z-dropdown: 40;
+  --sf-z-overlay: 100;
+  --sf-z-toast: 1000;
 }
 
 /* ---- Map tokens into the Tailwind theme ------------------------------ */
@@ -127,6 +156,23 @@
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: var(--sf-accent);
+    color: var(--sf-accent-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--sf-accent);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
   }
   /* faint grain to avoid flat banding on dark gradients */
   .sf-grain::after {
