@@ -16,8 +16,8 @@ vi.mock("../lib/title-data", () => ({
   fetchShow: vi.fn(async () => ({ id: 9, type: "show", title: "Show", imageUrl: "/s", videoUrl: null })),
   fetchEpisodes: vi.fn(async () => []),
 }));
-const getProgress = vi.fn(async () => 0);
-const saveProgress = vi.fn(async () => {});
+const getProgress = vi.fn(async (..._a: unknown[]) => 0);
+const saveProgress = vi.fn(async (..._a: unknown[]) => {});
 vi.mock("../lib/watch-data", async () => {
   const actual = await vi.importActual<typeof import("../lib/watch-data")>("../lib/watch-data");
   return { ...actual, getProgress: (...a: unknown[]) => getProgress(...a), saveProgress: (...a: unknown[]) => saveProgress(...a) };
