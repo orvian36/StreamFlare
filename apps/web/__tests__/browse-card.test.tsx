@@ -10,9 +10,9 @@ import { BrowseCard } from "../components/browse/browse-card";
 describe("BrowseCard", () => {
   beforeEach(() => { post.mockReset(); del.mockReset(); });
 
-  it("links to the watch route for the item", () => {
+  it("links to the title detail page for the item", () => {
     render(<BrowseCard item={{ MOVIE_ID: 7, TITLE: "X", IMAGE_URL: "/x" }} email="a@b.com" profileId="Ada" />);
-    expect(screen.getByRole("link")).toHaveAttribute("href", "/watch/7");
+    expect(screen.getByRole("link")).toHaveAttribute("href", "/title/movie/7");
   });
 
   it("adds to the watchlist without navigating", async () => {

@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { Check, Plus } from "lucide-react";
 import { PosterCard } from "@streamflare/ui/components/brand/poster-card";
-import { addToWatchList, removeFromWatchList, posterUrl, itemId, type BrowseItem } from "../../lib/browse-data";
+import { addToWatchList, removeFromWatchList, posterUrl, itemId, itemType, type BrowseItem } from "../../lib/browse-data";
 
 export interface BrowseCardProps {
   item: BrowseItem;
@@ -37,7 +37,7 @@ export function BrowseCard({ item, email, profileId, inList = false }: BrowseCar
 
   return (
     <div className="relative">
-      <Link href={`/watch/${id ?? ""}`} aria-label={item.TITLE}>
+      <Link href={`/title/${itemType(item)}/${id ?? ""}`} aria-label={item.TITLE}>
         <PosterCard title={item.TITLE} subtitle={subtitle} imageUrl={posterUrl(item.IMAGE_URL)} />
       </Link>
       <button
