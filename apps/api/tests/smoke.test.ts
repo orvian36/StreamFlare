@@ -122,3 +122,15 @@ describe("browse", () => {
     expect(res.status).toBe(404);
   });
 });
+
+describe("admin", () => {
+  it("GET /api/admin/overview returns totals, revenue and arrays", async () => {
+    const res = await request(app).get("/api/admin/overview");
+    expect(res.status).toBe(200);
+    expect(typeof res.body.totals.users).toBe("number");
+    expect(typeof res.body.revenue).toBe("number");
+    expect(Array.isArray(res.body.trending)).toBe(true);
+    expect(Array.isArray(res.body.topRated)).toBe(true);
+    expect(Array.isArray(res.body.genres)).toBe(true);
+  });
+});

@@ -6,6 +6,7 @@ import usersRouter from "./routes/users.routes.js";
 import profileRouter from "./routes/profile.routes.js";
 import browseRouter from "./routes/browse.routes.js";
 import subscriptionRouter from "./routes/subscription.routes.js";
+import adminRouter from "./routes/admin.routes.js";
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use("/api/users", usersRouter);
 app.use("/api/profiles", profileRouter);
 app.use("/api/browse", browseRouter);
 app.use("/api/subscription", subscriptionRouter);
+app.use("/api/admin", adminRouter);
 
 app.use(notFound);
 app.use(errorHandler);
