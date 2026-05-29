@@ -111,4 +111,26 @@ describe("browse", () => {
     expect(Array.isArray(res.body)).toBe(true);
     expect(res.body).toHaveLength(2);
   });
+
+  it("GET /api/browse/movie/:id returns 404 for an unknown id", async () => {
+    const res = await request(app).get("/api/browse/movie/999999");
+    expect(res.status).toBe(404);
+  });
+
+  it("GET /api/browse/show/:id returns 404 for an unknown id", async () => {
+    const res = await request(app).get("/api/browse/show/999999");
+    expect(res.status).toBe(404);
+  });
+});
+
+describe("admin", () => {
+  it("GET /api/admin/overview returns totals, revenue and arrays", async () => {
+    const res = await request(app).get("/api/admin/overview");
+    expect(res.status).toBe(200);
+    expect(typeof res.body.totals.users).toBe("number");
+    expect(typeof res.body.revenue).toBe("number");
+    expect(Array.isArray(res.body.trending)).toBe(true);
+    expect(Array.isArray(res.body.topRated)).toBe(true);
+    expect(Array.isArray(res.body.genres)).toBe(true);
+  });
 });

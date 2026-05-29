@@ -52,7 +52,7 @@ export function SignInForm() {
         auth.set_bill(bill.data.bill.BILL);
         router.push("/browse");
       } else {
-        router.push("/subscription/add");
+        router.push("/onboarding");
       }
     } catch (err) {
       const msg = (err as Error).message ?? "Something went wrong";

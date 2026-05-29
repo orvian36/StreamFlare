@@ -43,6 +43,6 @@ describe("SignInForm", () => {
       { EMAIL: "a@b.com", PASSWORD: "secret1" },
       { validateStatus: expect.any(Function) },
     ));
-    await waitFor(() => expect(push).toHaveBeenCalledWith("/subscription/add"));
+    await waitFor(() => expect(push).toHaveBeenCalledWith("/onboarding"));
   });
 });

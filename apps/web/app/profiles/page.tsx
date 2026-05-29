@@ -1,16 +1,17 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Header, Profiles } from '@streamflare/ui';
-import { api } from '../../lib/api-client';
-import { useAuth } from '../../context/auth-context';
-import * as ROUTES from '../../constants/routes';
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Plus } from "lucide-react";
+import { ProfileAvatar } from "@streamflare/ui/components/brand/profile-avatar";
+import { Stagger, StaggerItem } from "@streamflare/ui/motion";
+import { api } from "../../lib/api-client";
+import { useAuth } from "../../context/auth-context";
+import { GateHeader } from "../../components/profiles/gate-header";
+import * as ROUTES from "../../constants/routes";
 
-interface Profile {
-  PROFILE_ID: string;
-  DOB: string | null;
-}
+interface Profile { PROFILE_ID: string; DOB: string | null }
 
 export default function ProfilesPage() {
   const auth = useAuth();
@@ -19,65 +20,76 @@ export default function ProfilesPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!auth.email) {
-      router.push(ROUTES.SIGN_IN);
-      return;
-    }
+    if (!auth.email) { router.push(ROUTES.SIGN_IN); return; }
     api
       .get<{ profile: Profile[] }>(`/api/profiles/${auth.email}`)
       .then((res) => {
-        const profileList = res.data.profile ?? [];
-        setProfiles(profileList);
-        auth.set_num_profiles(profileList.length);
+        const list = res.data.profile ?? [];
+        setProfiles(list);
+        auth.set_num_profiles(list.length);
       })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   }, [auth.email, router]);
 
-  function selectProfile(profileId: string) {
-    const idx = profiles.findIndex((p) => p.PROFILE_ID === profileId);
-    if (idx >= 0) {
-      auth.set_ptbd(idx);
-      auth.set_profile(profileId);
-    }
+  function select(profileId: string, index: number) {
+    auth.set_ptbd(index);
+    auth.set_profile(profileId);
     router.push(ROUTES.BROWSE);
   }
 
-  return (
-    <>
-      <Header bg={false}>
-        <Header.Frame>
-          <Header.Logo to={ROUTES.HOME} src="/images/logo.svg" alt="StreamFlare" />
-          {profiles.length < (auth.max_profiles ?? 0) ? (
-            <Header.ButtonLink to={ROUTES.CREATE_PROFILE}>Create Profile</Header.ButtonLink>
-          ) : (
-            <Header.ButtonLink
-              to={ROUTES.SIGN_IN}
-              onClick={() => {
-                auth.logout();
-              }}
-            >
-              Log Out
-            </Header.ButtonLink>
-          )}
-        </Header.Frame>
-      </Header>
+  const canAdd = profiles.length < (auth.max_profiles ?? 0);
 
-      <Profiles>
-        <Profiles.Title>Who&apos;s watching?</Profiles.Title>
+  return (
+    <main className="flex min-h-dvh flex-col bg-canvas">
+      <GateHeader />
+      <div className="flex flex-1 flex-col items-center justify-center px-6 pb-24">
+        <h1 className="mb-10 font-display text-3xl font-bold tracking-tight text-text md:text-5xl">
+          Who&apos;s watching?
+        </h1>
         {loading ? (
-          <div style={{ textAlign: 'center', color: 'white', marginTop: '20px' }}>Loading...</div>
-        ) : (
-          <Profiles.List>
-            {profiles.map((p, index) => (
-              <Profiles.User key={p.PROFILE_ID} onClick={() => selectProfile(p.PROFILE_ID)}>
-                <Profiles.Picture src={(index + 1).toString()} />
-                <Profiles.Name>{p.PROFILE_ID}</Profiles.Name>
-              </Profiles.User>
+          <div className="flex gap-6">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="size-24 animate-pulse rounded-xl bg-surface-2" />
             ))}
-          </Profiles.List>
+          </div>
+        ) : (
+          <Stagger className="flex flex-wrap items-start justify-center gap-6 md:gap-8">
+            {profiles.map((p, index) => (
+              <StaggerItem key={p.PROFILE_ID}>
+                <button
+                  type="button"
+                  onClick={() => select(p.PROFILE_ID, index)}
+                  className="group flex flex-col items-center gap-3"
+                >
+                  <ProfileAvatar
+                    name={p.PROFILE_ID}
+                    size="lg"
+                    className="transition-transform group-hover:scale-105 group-focus-visible:ring-2 group-focus-visible:ring-ring"
+                  />
+                  <span className="text-sm text-text-muted group-hover:text-text">{p.PROFILE_ID}</span>
+                </button>
+              </StaggerItem>
+            ))}
+            {canAdd ? (
+              <StaggerItem>
+                <Link href={ROUTES.CREATE_PROFILE} className="group flex flex-col items-center gap-3">
+                  <span className="grid size-24 place-items-center rounded-xl border-2 border-dashed border-hairline text-text-subtle transition-colors group-hover:border-brand group-hover:text-text">
+                    <Plus className="size-8" />
+                  </span>
+                  <span className="text-sm text-text-muted group-hover:text-text">Add profile</span>
+                </Link>
+              </StaggerItem>
+            ) : null}
+          </Stagger>
         )}
-      </Profiles>
-    </>
+        <Link
+          href={ROUTES.DELETE_PROFILE}
+          className="mt-12 font-mono text-xs uppercase tracking-wide text-text-subtle hover:text-text"
+        >
+          Manage profiles
+        </Link>
+      </div>
+    </main>
   );
 }

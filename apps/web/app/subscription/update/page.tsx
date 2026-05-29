@@ -1,55 +1,43 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Alert, Box, Button, Card, CardActions, CardContent, Container, Grid, Typography } from "@mui/material";
+import { Alert, AlertDescription } from "@streamflare/ui/components/ui/alert";
+import { AppShell } from "../../../components/app/app-shell";
+import { PlanPicker } from "../../../components/subscription/plan-picker";
 import { api } from "../../../lib/api-client";
 import { useAuth } from "../../../context/auth-context";
 import * as ROUTES from "../../../constants/routes";
 
-interface Plan {
-  SUB_TYPE: string;
-  BILL: number;
-  NUM_PROFILES: number;
-}
+const BILL_TO_TYPE: Record<number, string> = { 5: "Basic", 8: "Standard", 10: "Premium" };
+const TYPE_PROFILES: Record<string, number> = { Basic: 2, Standard: 4, Premium: 6 };
+const TYPE_BILL: Record<string, number> = { Basic: 5, Standard: 8, Premium: 10 };
 
 export default function UpdateSubscriptionPage() {
   const auth = useAuth();
   const router = useRouter();
-  const [plans, setPlans] = useState<Plan[]>([]);
   const [error, setError] = useState("");
-  const [submitting, setSubmitting] = useState<string | null>(null);
+  const [selecting, setSelecting] = useState<string | null>(null);
+  const currentType = auth.bill != null ? BILL_TO_TYPE[auth.bill] : undefined;
 
-  useEffect(() => {
-    api.get<{ plans: Plan[] }>("/api/subscription/plans").then((r) => setPlans(r.data.plans));
-  }, []);
-
-  async function choose(plan: Plan) {
+  async function choose(subType: string) {
     if (!auth.email) { setError("Not signed in"); return; }
-    setSubmitting(plan.SUB_TYPE);
-    const oneMonthFromNow = new Date();
-    oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
+    setSelecting(subType);
+    const end = new Date();
+    end.setMonth(end.getMonth() + 1);
     try {
       const { status } = await api.post(
         "/api/subscription/update",
-        {
-          EMAIL: auth.email,
-          SUB_TYPE: plan.SUB_TYPE,
-          END_DATE: oneMonthFromNow.toISOString().slice(0, 10),
-        },
+        { EMAIL: auth.email, SUB_TYPE: subType, END_DATE: end.toISOString().slice(0, 10) },
         { validateStatus: () => true },
       );
       if (status === 201) {
-        // Update auth context to reflect new plan
-        auth.set_bill(plan.BILL);
-        auth.set_max_profiles(plan.NUM_PROFILES);
-        const np = auth.num_profiles ?? 0;
-        if (np > plan.NUM_PROFILES) {
-          auth.set_ptbd(np - plan.NUM_PROFILES);
-          router.push(ROUTES.DELETE_PROFILE);
-        } else {
-          router.push(ROUTES.BROWSE);
-        }
+        const numProfiles = TYPE_PROFILES[subType] ?? 0;
+        if (TYPE_BILL[subType]) auth.set_bill(TYPE_BILL[subType]);
+        auth.set_max_profiles(numProfiles);
+        if ((auth.num_profiles ?? 0) > numProfiles) router.push(ROUTES.DELETE_PROFILE);
+        else router.push(ROUTES.BROWSE);
       } else if (status === 422) {
         setError("Invalid user info");
       } else {
@@ -58,41 +46,23 @@ export default function UpdateSubscriptionPage() {
     } catch (err) {
       setError((err as Error).message);
     } finally {
-      setSubmitting(null);
+      setSelecting(null);
     }
   }
 
   return (
-    <Container sx={{ mt: 4, color: "#fff" }} maxWidth="md">
-      <Typography variant="h4">Change your plan</Typography>
-      {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
-      <Grid container spacing={2} sx={{ mt: 2 }}>
-        {plans.map((p) => (
-          <Grid item xs={12} md={4} key={p.SUB_TYPE}>
-            <Card sx={{ background: "#222", color: "#fff" }}>
-              <CardContent>
-                <Typography variant="h5">{p.SUB_TYPE}</Typography>
-                <Typography>${p.BILL}/month</Typography>
-                <Typography>Up to {p.NUM_PROFILES} profiles</Typography>
-              </CardContent>
-              <CardActions>
-                <Button
-                  fullWidth
-                  variant="contained"
-                  color="error"
-                  disabled={submitting === p.SUB_TYPE}
-                  onClick={() => choose(p)}
-                >
-                  {submitting === p.SUB_TYPE ? "Updating..." : "Select Plan"}
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-      <Box sx={{ mt: 3 }}>
-        <Button variant="text" color="inherit" onClick={() => router.back()}>← Back</Button>
-      </Box>
-    </Container>
+    <AppShell>
+      <div className="mx-auto max-w-5xl space-y-6">
+        <div className="space-y-1">
+          <h1 className="font-display text-3xl font-bold tracking-tight text-text">Change your plan</h1>
+          <p className="text-text-muted">Upgrade or downgrade anytime.</p>
+        </div>
+        {error ? <Alert variant="destructive"><AlertDescription>{error}</AlertDescription></Alert> : null}
+        <PlanPicker onSelect={choose} selecting={selecting} currentType={currentType} />
+        <Link href={ROUTES.ACCOUNT_SETTINGS} className="inline-block font-mono text-xs uppercase tracking-wide text-text-subtle hover:text-text">
+          Back to account
+        </Link>
+      </div>
+    </AppShell>
   );
 }
