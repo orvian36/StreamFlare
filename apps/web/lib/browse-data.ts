@@ -23,6 +23,8 @@ export const posterUrl = (path: string | null | undefined): string =>
 
 export const itemId = (it: BrowseItem): number | undefined => it.MOVIE_ID ?? it.SHOW_ID;
 
+export const itemType = (it: BrowseItem): "movie" | "show" => (it.MOVIE_ID != null ? "movie" : "show");
+
 export function groupByGenre(items: BrowseItem[]): SlideItem[] {
   const map = new Map<string, BrowseItem[]>();
   for (const it of items) {
