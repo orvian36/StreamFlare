@@ -111,4 +111,14 @@ describe("browse", () => {
     expect(Array.isArray(res.body)).toBe(true);
     expect(res.body).toHaveLength(2);
   });
+
+  it("GET /api/browse/movie/:id returns 404 for an unknown id", async () => {
+    const res = await request(app).get("/api/browse/movie/999999");
+    expect(res.status).toBe(404);
+  });
+
+  it("GET /api/browse/show/:id returns 404 for an unknown id", async () => {
+    const res = await request(app).get("/api/browse/show/999999");
+    expect(res.status).toBe(404);
+  });
 });

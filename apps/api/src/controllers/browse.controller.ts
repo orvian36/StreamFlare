@@ -779,3 +779,56 @@ export async function getSimilar(req: Request, res: Response, _next: NextFunctio
     res.status(400).json({ message: "Couldnt find similar items" });
   }
 }
+
+// ────────────────────────────────────────────────────────────────────────────
+// getMovie / getShow — single title core fields for the detail page
+// ────────────────────────────────────────────────────────────────────────────
+export async function getMovie(req: Request, res: Response, _next: NextFunction) {
+  const id = asInt(req.params.id);
+  if (id == null) return res.status(400).json({ message: "Invalid movie id" });
+  try {
+    const m = await prisma.movie.findUnique({ where: { movieId: id } });
+    if (!m) return res.status(404).json({ message: "Movie not found" });
+    res.status(200).json({
+      MOVIE_ID: m.movieId,
+      TITLE: m.title,
+      DESCRIPTION: m.description,
+      RATING: m.rating,
+      RELEASE_DATE: yearOf(m.releaseDate),
+      MATURITY_RATING: m.maturityRating,
+      LENGTH: m.length,
+      LANGUAGE: m.language,
+      IMAGE_URL: m.imageUrl,
+      VIDEO_URL: m.videoUrl,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ message: "Failed to fetch movie" });
+  }
+}
+
+export async function getShow(req: Request, res: Response, _next: NextFunction) {
+  const id = asInt(req.params.id);
+  if (id == null) return res.status(400).json({ message: "Invalid show id" });
+  try {
+    const s = await prisma.show.findUnique({ where: { showId: id } });
+    if (!s) return res.status(404).json({ message: "Show not found" });
+    res.status(200).json({
+      SHOW_ID: s.showId,
+      TITLE: s.title,
+      DESCRIPTION: s.description,
+      RATING: s.rating,
+      START_YEAR: yearOf(s.startDate),
+      END_YEAR: yearOf(s.endDate),
+      MATURITY_RATING: s.maturityRating,
+      SEASONS: s.seasons,
+      EPISODES: s.episodes,
+      LANGUAGE: s.language,
+      IMAGE_URL: s.imageUrl,
+      VIDEO_URL: s.videoUrl,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ message: "Failed to fetch show" });
+  }
+}

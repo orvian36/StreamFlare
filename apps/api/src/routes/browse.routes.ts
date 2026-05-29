@@ -13,5 +13,7 @@ router.get("/new", ctrl.newAndPopular);
 router.get("/genre", ctrl.getGenres);
 router.get("/celeb", ctrl.getCelebs);
 router.get("/similar", ctrl.getSimilar);
+router.get("/movie/:id", ctrl.getMovie);
+router.get("/show/:id", ctrl.getShow);
 
 export default router;
