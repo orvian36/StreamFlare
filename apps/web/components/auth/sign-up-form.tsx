@@ -47,7 +47,7 @@ export function SignUpForm() {
       if (status === 423) return setFormError("User already exists. Try signing in.");
       if (status !== 201) return setFormError("Sign up failed. Please try again.");
       auth.login(v.email, data.token);
-      router.push("/subscription/add");
+      router.push("/onboarding");
     } catch (err) {
       const msg = (err as Error).message ?? "Something went wrong";
       setFormError(msg);
