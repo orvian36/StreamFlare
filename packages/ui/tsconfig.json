@@ -5,6 +5,11 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
+      "@streamflare/ui": ["./src/index.ts"],
+      "@streamflare/ui/components": ["./src/components"],
+      "@streamflare/ui/components/ui": ["./src/components/ui"],
+      "@streamflare/ui/lib": ["./src/lib"],
+      "@streamflare/ui/hooks": ["./src/hooks"],
       "@streamflare/ui/lib/*": ["./src/lib/*"],
       "@streamflare/ui/hooks/*": ["./src/hooks/*"],
       "@streamflare/ui/components/ui/*": ["./src/components/ui/*"],

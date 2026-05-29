@@ -1,8 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import Tag from "@streamflare/ui/src/components/tag";
-import Section from "@streamflare/ui/src/components/section";
-import Frame from "@streamflare/ui/src/components/frame";
+import { Tag, Section, Frame } from "@streamflare/ui";
 
 describe("presentational primitives", () => {
   it("Tag renders its text", () => {
