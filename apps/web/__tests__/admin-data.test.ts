@@ -6,8 +6,8 @@ vi.mock("../lib/api-client", () => ({ api: { get: (...a: unknown[]) => get(...a)
 import { fetchOverview, isAdmin } from "../lib/admin-data";
 
 describe("admin-data", () => {
-  beforeEach(() => get.mockReset());
-  afterEach(() => vi.unstubAllEnvs());
+  beforeEach(() => { get.mockReset(); });
+  afterEach(() => { vi.unstubAllEnvs(); });
 
   it("isAdmin allows any signed-in user when no allowlist is set", () => {
     vi.stubEnv("NEXT_PUBLIC_ADMIN_EMAILS", "");
