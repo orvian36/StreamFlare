@@ -1,0 +1,12 @@
+[
+  { "title": "Joker", "subtitle": "2019 · Thriller", "image": "/images/films/thriller/joker/large.jpg" },
+  { "title": "The Prestige", "subtitle": "2006 · Drama", "image": "/images/films/drama/the-prestige/large.jpg" },
+  { "title": "Fight Club", "subtitle": "1999 · Drama", "image": "/images/films/drama/fight-club/large.jpg" },
+  { "title": "Shutter Island", "subtitle": "2010 · Suspense", "image": "/images/films/suspense/shutter-island/large.jpg" },
+  { "title": "The Revenant", "subtitle": "2015 · Drama", "image": "/images/films/drama/the-revenant/large.jpg" },
+  { "title": "La La Land", "subtitle": "2016 · Romance", "image": "/images/films/romance/la-la-land/large.jpg" },
+  { "title": "Gone Girl", "subtitle": "2014 · Suspense", "image": "/images/films/suspense/gone-girl/large.jpg" },
+  { "title": "Black Swan", "subtitle": "2010 · Thriller", "image": "/images/films/thriller/black-swan/large.jpg" },
+  { "title": "The Social Network", "subtitle": "2010 · Drama", "image": "/images/films/drama/the-social-network/large.jpg" },
+  { "title": "Se7en", "subtitle": "1995 · Suspense", "image": "/images/films/suspense/seven/large.jpg" }
+]
