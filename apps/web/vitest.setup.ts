@@ -15,6 +15,13 @@ if (!Element.prototype.scrollIntoView) {
   Element.prototype.scrollIntoView = function scrollIntoView() {};
 }
 
+// jsdom lacks the Pointer Capture API, which Radix uses to open menus/dropdowns.
+if (!Element.prototype.hasPointerCapture) {
+  Element.prototype.hasPointerCapture = () => false;
+  Element.prototype.setPointerCapture = () => {};
+  Element.prototype.releasePointerCapture = () => {};
+}
+
 // jsdom does not implement media playback.
 if (typeof window !== "undefined") {
   window.HTMLMediaElement.prototype.play = function play() { return Promise.resolve(); };

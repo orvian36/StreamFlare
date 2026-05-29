@@ -29,6 +29,12 @@ describe("AppShell", () => {
     expect(await screen.findByPlaceholderText(/search films and series/i)).toBeInTheDocument();
   });
 
+  it("shows an Admin menu item for an admin", async () => {
+    render(<AppShell><p>c</p></AppShell>);
+    fireEvent.keyDown(screen.getByRole("button", { name: /account menu/i }), { key: "Enter" });
+    expect(await screen.findByText("Admin")).toBeInTheDocument();
+  });
+
   it("redirects to /signin when unauthenticated", async () => {
     authValue = { email: null, profile: null, logout: vi.fn() };
     render(<AppShell><p>x</p></AppShell>);

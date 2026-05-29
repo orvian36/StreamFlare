@@ -12,6 +12,7 @@ import {
 } from "@streamflare/ui/components/ui/dropdown-menu";
 import { CommandPalette } from "../search/command-palette";
 import { useAuth } from "../../context/auth-context";
+import { isAdmin } from "../../lib/admin-data";
 import * as ROUTES from "../../constants/routes";
 
 export function AppShell({ children, nav }: { children: React.ReactNode; nav?: React.ReactNode }) {
@@ -65,6 +66,9 @@ export function AppShell({ children, nav }: { children: React.ReactNode; nav?: R
                 <span className="truncate">{who}</span>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
+              {isAdmin(auth.email) ? (
+                <DropdownMenuItem onSelect={() => router.push(ROUTES.ADMIN)}>Admin</DropdownMenuItem>
+              ) : null}
               <DropdownMenuItem onSelect={() => router.push(ROUTES.ACCOUNT_SETTINGS)}>Account</DropdownMenuItem>
               <DropdownMenuItem onSelect={() => router.push(ROUTES.PROFILES)}>Switch profile</DropdownMenuItem>
               <DropdownMenuSeparator />
