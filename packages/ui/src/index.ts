@@ -17,3 +17,18 @@ export { default as Field } from './components/field';
 export { default as Tag } from './components/tag';
 export { default as Section } from './components/section';
 export { default as Frame } from './components/frame';
+
+// --- Premium redesign (Phase 0): Aurora Noir design system ---
+export * from './motion';
+export { Wordmark } from './components/brand/wordmark';
+export { GlowButton } from './components/brand/glow-button';
+export { GlassPanel } from './components/brand/glass-panel';
+export { SectionHeader } from './components/brand/section-header';
+export { Rating } from './components/brand/rating';
+export { MaturityBadge } from './components/brand/maturity-badge';
+export { GenreChip } from './components/brand/genre-chip';
+export { PosterCard } from './components/brand/poster-card';
+export { ContentRow } from './components/brand/content-row';
+export { HeroBackdrop } from './components/brand/hero-backdrop';
+export { EmptyState } from './components/brand/empty-state';
+export { CountryCombobox } from './components/forms/country-combobox';
