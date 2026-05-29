@@ -3,12 +3,14 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Search } from "lucide-react";
 import { Wordmark } from "@streamflare/ui/components/brand/wordmark";
 import { ProfileAvatar } from "@streamflare/ui/components/brand/profile-avatar";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
   DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@streamflare/ui/components/ui/dropdown-menu";
+import { CommandPalette } from "../search/command-palette";
 import { useAuth } from "../../context/auth-context";
 import * as ROUTES from "../../constants/routes";
 
@@ -16,9 +18,22 @@ export function AppShell({ children, nav }: { children: React.ReactNode; nav?: R
   const auth = useAuth();
   const router = useRouter();
 
+  const [searchOpen, setSearchOpen] = React.useState(false);
+
   React.useEffect(() => {
     if (!auth.email) router.push(ROUTES.SIGN_IN);
   }, [auth.email, router]);
+
+  React.useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setSearchOpen((o) => !o);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   const who = auth.profile ?? auth.email ?? "Guest";
 
@@ -28,6 +43,15 @@ export function AppShell({ children, nav }: { children: React.ReactNode; nav?: R
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-3 md:px-10">
           <Link href={ROUTES.BROWSE} aria-label="StreamFlare home"><Wordmark /></Link>
           {nav ? <div className="hidden flex-1 justify-center md:flex">{nav}</div> : null}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              aria-label="Search"
+              onClick={() => setSearchOpen(true)}
+              className="grid size-9 place-items-center rounded-full text-text-muted hover:bg-surface-3 hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <Search className="size-5" />
+            </button>
           <DropdownMenu>
             <DropdownMenuTrigger
               aria-label="Account menu"
@@ -47,9 +71,11 @@ export function AppShell({ children, nav }: { children: React.ReactNode; nav?: R
               <DropdownMenuItem onSelect={() => { auth.logout(); router.push(ROUTES.SIGN_IN); }}>Sign out</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          </div>
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-6 py-10 md:px-10">{children}</main>
+      <CommandPalette open={searchOpen} onOpenChange={setSearchOpen} />
     </div>
   );
 }
