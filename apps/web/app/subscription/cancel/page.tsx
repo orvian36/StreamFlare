@@ -1,9 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Alert, Box, Button, Container, Typography } from "@mui/material";
+import { GlowButton } from "@streamflare/ui/components/brand/glow-button";
+import { Alert, AlertDescription } from "@streamflare/ui/components/ui/alert";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from "@streamflare/ui/components/ui/alert-dialog";
+import { AppShell } from "../../../components/app/app-shell";
 import { api } from "../../../lib/api-client";
 import { useAuth } from "../../../context/auth-context";
 import * as ROUTES from "../../../constants/routes";
@@ -12,54 +17,47 @@ export default function CancelSubscriptionPage() {
   const auth = useAuth();
   const router = useRouter();
   const [error, setError] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+  const [busy, setBusy] = useState(false);
 
-  async function handleCancel() {
+  async function cancel() {
     if (!auth.email) { setError("Not signed in"); return; }
-    setError("");
-    setSubmitting(true);
+    setBusy(true);
     try {
-      const { status } = await api.patch(
-        "/api/subscription/delete",
-        { EMAIL: auth.email },
-        { validateStatus: () => true },
-      );
-      if (status === 201) {
-        router.push(ROUTES.ADD_SUBSCRIPTION);
-      } else if (status === 422) {
-        setError("Invalid user info");
-      } else {
-        setError("Failed to cancel subscription");
-      }
+      const { status } = await api.patch("/api/subscription/delete", { EMAIL: auth.email }, { validateStatus: () => true });
+      if (status === 201) { auth.set_bill(0); router.push(ROUTES.ACCOUNT_SETTINGS); }
+      else if (status === 422) setError("Invalid user info");
+      else setError("Failed to cancel subscription");
     } catch (err) {
       setError((err as Error).message);
     } finally {
-      setSubmitting(false);
+      setBusy(false);
     }
   }
 
   return (
-    <Container maxWidth="xs" sx={{ mt: 8, color: "#fff" }}>
-      <Typography variant="h4" gutterBottom>Cancel Membership?</Typography>
-      <Typography color="#aaa" sx={{ mb: 3 }}>
-        Are you sure you want to cancel your StreamFlare membership? You will lose access at the end of your billing period.
-      </Typography>
-      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-      <Box sx={{ display: "flex", gap: 2 }}>
-        <Button
-          variant="contained"
-          color="error"
-          disabled={submitting}
-          onClick={handleCancel}
-          data-testid="cancel"
-          fullWidth
-        >
-          {submitting ? "Cancelling..." : "Yes, Cancel"}
-        </Button>
-        <Button variant="outlined" color="inherit" component={Link} href={ROUTES.ACCOUNT_SETTINGS} fullWidth>
-          Go back
-        </Button>
-      </Box>
-    </Container>
+    <AppShell>
+      <div className="mx-auto max-w-md space-y-4">
+        <h1 className="font-display text-3xl font-bold tracking-tight text-text">Cancel membership</h1>
+        <p className="text-text-muted">
+          You&apos;ll keep access until the end of your current billing period. You can resubscribe anytime.
+        </p>
+        {error ? <Alert variant="destructive"><AlertDescription>{error}</AlertDescription></Alert> : null}
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <GlowButton variant="ghost" disabled={busy}>Cancel membership</GlowButton>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Cancel your membership?</AlertDialogTitle>
+              <AlertDialogDescription>This stops your renewal. You keep access until your period ends.</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Keep membership</AlertDialogCancel>
+              <AlertDialogAction onClick={cancel} disabled={busy}>Yes, cancel</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
+    </AppShell>
   );
 }
