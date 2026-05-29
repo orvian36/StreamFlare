@@ -1,4 +1,5 @@
-@import "normalize.css";
+/* Base reset + tokens are provided by @streamflare/ui/globals.css (mounted in
+   the root layout). normalize.css was removed: Tailwind v4 preflight replaces it. */
 
 :root {
   color-scheme: dark;
@@ -14,8 +15,8 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: oklch(0.17 0.012 265);
-  color: oklch(0.96 0.006 265);
+  background: oklch(0.16 0.015 274);
+  color: oklch(0.97 0.005 274);
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 

@@ -12,9 +12,15 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"],
+      "@streamflare/ui": ["../../packages/ui/src/index.ts"],
+      "@streamflare/ui/components": ["../../packages/ui/src/components"],
+      "@streamflare/ui/components/*": ["../../packages/ui/src/components/*"],
+      "@streamflare/ui/lib": ["../../packages/ui/src/lib"],
+      "@streamflare/ui/lib/*": ["../../packages/ui/src/lib/*"],
+      "@streamflare/ui/hooks": ["../../packages/ui/src/hooks"],
+      "@streamflare/ui/hooks/*": ["../../packages/ui/src/hooks/*"],
+      "@streamflare/ui/motion": ["../../packages/ui/src/motion/index.tsx"]
     },
     "allowJs": true
   },

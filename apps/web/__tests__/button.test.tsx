@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import Button from "@streamflare/ui/src/components/button";
+import { Button } from "@streamflare/ui";
 
 describe("Button", () => {
   it("renders a native button with its label as the accessible name", () => {

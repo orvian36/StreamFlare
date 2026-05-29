@@ -2,7 +2,21 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "noEmit": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@streamflare/ui": ["./src/index.ts"],
+      "@streamflare/ui/components": ["./src/components"],
+      "@streamflare/ui/components/ui": ["./src/components/ui"],
+      "@streamflare/ui/lib": ["./src/lib"],
+      "@streamflare/ui/hooks": ["./src/hooks"],
+      "@streamflare/ui/lib/*": ["./src/lib/*"],
+      "@streamflare/ui/hooks/*": ["./src/hooks/*"],
+      "@streamflare/ui/components/ui/*": ["./src/components/ui/*"],
+      "@streamflare/ui/components/brand/*": ["./src/components/brand/*"],
+      "@streamflare/ui/components/forms/*": ["./src/components/forms/*"],
+      "@streamflare/ui/motion": ["./src/motion/index.tsx"]
+    }
   },
   "include": ["src/**/*"]
 }

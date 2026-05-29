@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import Field from "@streamflare/ui/src/components/field";
+import { Field } from "@streamflare/ui";
 
 describe("Field", () => {
   it("associates its visible label with the input", () => {
