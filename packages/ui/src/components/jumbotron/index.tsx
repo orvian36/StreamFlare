@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container, Inner, Item, Pane, Title, SubTitle, Image } from './styles/jumbotron';
+import Frame from '../frame';
 
 interface JumbotronProps extends React.HTMLAttributes<HTMLDivElement> {
     direction?: string;
@@ -30,5 +31,9 @@ Jumbotron.SubTitle = function JumbotronSubTitle({ children, ...restProps }: Reac
 };
 
 Jumbotron.Image = function JumbotronImage({ ...restProps }: React.ImgHTMLAttributes<HTMLImageElement>) {
-    return <Image {...restProps} />;
+    return (
+        <Frame>
+            <Image {...restProps} />
+        </Frame>
+    );
 };

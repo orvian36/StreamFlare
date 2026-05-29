@@ -34,12 +34,10 @@ Accordion.Header = function AccordionHeader({ children, ...restProps }: React.HT
     const { toggleShow, setToggleShow } = context;
     return (
         <Header onClick={() => setToggleShow(!toggleShow)} {...restProps}>
-            {children}
-            {toggleShow ? (
-                <img src="/images/icons/close-map.png" alt="Close" />
-            ) : (
-                <img src="/images/icons/add.png" alt="Open" />
-            )}
+            <span>{children}</span>
+            <span className="sign" aria-hidden="true">
+                {toggleShow ? '-' : '+'}
+            </span>
         </Header>
     );
 };

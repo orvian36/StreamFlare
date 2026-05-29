@@ -1,99 +1,147 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Link from 'next/link';
 
 export const Background = styled.div<{ src?: string; dontShowOnSmallViewPort?: boolean }>`
+    position: relative;
     display: flex;
     flex-direction: column;
-    background: url(${({ src }) => (src ? `/images/misc/${src}.jpg` : '/images/misc/home-bg.jpg')}) top left / cover no-repeat;
+    background: var(--sf-canvas);
+    border-bottom: 1px solid var(--sf-line);
+    isolation: isolate;
+    ${({ src }) =>
+        src &&
+        css`
+            &::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                z-index: -1;
+                background: url(/images/misc/${src}.jpg) center / cover no-repeat;
+                filter: grayscale(1) contrast(1.05) brightness(0.45);
+            }
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                z-index: -1;
+                background: linear-gradient(180deg, oklch(0.17 0.012 265 / 0.35) 0%, var(--sf-canvas) 92%);
+            }
+        `}
     @media (max-width: 1100px) {
-        ${({ dontShowOnSmallViewPort }) => dontShowOnSmallViewPort && 'background: none;'}
+        ${({ dontShowOnSmallViewPort }) =>
+            dontShowOnSmallViewPort &&
+            css`
+                &::before,
+                &::after {
+                    display: none;
+                }
+            `}
     }
 `;
 
 export const Container = styled.div`
+    position: sticky;
+    top: 0;
+    z-index: var(--sf-z-header);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 64px;
-    padding: 18px 56px;
+    height: 72px;
+    padding: 0 var(--sf-space-7);
+    background: var(--sf-canvas);
+    border-bottom: 1px solid var(--sf-line);
     a {
         display: flex;
+        align-items: center;
     }
     @media (max-width: 1000px) {
-        padding: 18px 30px;
+        padding: 0 var(--sf-space-5);
     }
 `;
 
 export const LinkRoute = styled(Link)`
     display: flex;
+    text-decoration: none;
 `;
 
-export const Logo = styled.img`
-    height: 32px;
-    width: 108px;
-    margin-right: 40px;
-    @media (max-width: 1449px) {
-        height: 45px;
-        width: 150px;
-    }
+export const Wordmark = styled.span`
+    font-family: var(--sf-font-display);
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--sf-text);
+    white-space: nowrap;
 `;
 
 export const ButtonLink = styled(Link)`
-    display: block;
-    background-color: #e50914;
-    width: 84px;
-    height: fit-content;
-    color: white;
-    border: 0;
-    font-size: 15px;
-    border-radius: 3px;
-    padding: 8px 17px;
-    cursor: pointer;
+    font-family: var(--sf-font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 13px;
+    background: var(--sf-accent);
+    color: var(--sf-accent-ink);
+    border: 2px solid var(--sf-accent);
+    padding: 10px 18px;
     text-decoration: none;
-    box-sizing: border-box;
+    cursor: pointer;
+    transition: background var(--sf-dur-fast) var(--sf-ease), color var(--sf-dur-fast) var(--sf-ease);
     &:hover {
-        background-color: #f40612;
+        background: transparent;
+        color: var(--sf-accent);
     }
 `;
 
 export const Group = styled.div`
     display: flex;
     align-items: center;
+    gap: var(--sf-space-5);
 `;
 
 export const TextLink = styled.p<{ active?: string }>`
-    color: white;
-    text-decoration: none;
-    margin-right: 30px;
-    font-weight: ${({ active }) => (active === 'true' ? '700' : 'normal')};
+    font-family: var(--sf-font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 13px;
+    margin: 0;
     cursor: pointer;
+    color: ${({ active }) => (active === 'true' ? 'var(--sf-accent)' : 'var(--sf-text)')};
+    border-bottom: 2px solid ${({ active }) => (active === 'true' ? 'var(--sf-accent)' : 'transparent')};
+    padding-bottom: 2px;
+    transition: color var(--sf-dur-fast) var(--sf-ease), border-color var(--sf-dur-fast) var(--sf-ease);
     &:hover {
-        font-weight: bold;
-    }
-    &:last-of-type {
-        margin-right: 0;
+        color: var(--sf-accent);
     }
 `;
 
 export const SearchInput = styled.input<{ active?: boolean }>`
-    background-color: #333333b2;
-    color: white;
-    border: 1px solid white;
-    transition: width 0.5s;
-    height: 30px;
-    font-size: 14px;
-    margin-left: ${({ active }) => (active ? '10px' : '0')};
-    padding: ${({ active }) => (active ? '0 10px' : '0')};
+    background: var(--sf-surface-1);
+    color: var(--sf-text);
+    border: 1px solid var(--sf-line);
+    border-radius: 0;
+    transition: width var(--sf-dur) var(--sf-ease), opacity var(--sf-dur) var(--sf-ease);
+    height: 36px;
+    font-family: var(--sf-font-mono);
+    font-size: 13px;
+    margin-left: ${({ active }) => (active ? 'var(--sf-space-2)' : '0')};
+    padding: ${({ active }) => (active ? '0 var(--sf-space-3)' : '0')};
     opacity: ${({ active }) => (active ? '1' : '0')};
-    width: ${({ active }) => (active ? '200px' : '0px')};
+    width: ${({ active }) => (active ? '220px' : '0px')};
+    &:focus-visible {
+        border-color: var(--sf-accent);
+        outline: none;
+    }
 `;
 
 export const Search = styled.div`
     display: flex;
     align-items: center;
-    svg {
-        color: white;
+    button {
+        background: transparent;
+        border: 0;
         cursor: pointer;
+        display: flex;
+        color: var(--sf-text);
     }
     @media (max-width: 700px) {
         display: none;
@@ -101,32 +149,28 @@ export const Search = styled.div`
 `;
 
 export const Picture = styled.img`
-    background: url(/images/users/2.png);
-    background-size: contain;
-    border: 0;
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--sf-line);
+    object-fit: cover;
     cursor: pointer;
 `;
 
 export const Dropdown = styled.div`
     display: none;
     position: absolute;
-    background-color: black;
-    padding: 10px;
-    width: 100px;
-    top: 32px;
-    right: 10px;
+    top: 48px;
+    right: 0;
+    background: var(--sf-surface-1);
+    border: 1px solid var(--sf-line);
+    padding: var(--sf-space-3);
+    min-width: 180px;
+    z-index: var(--sf-z-dropdown);
     ${Group} {
-        margin-bottom: 10px;
+        gap: var(--sf-space-3);
+        margin-bottom: var(--sf-space-3);
         &:last-of-type {
             margin-bottom: 0;
-        }
-        ${TextLink} {
-            cursor: pointer;
-        }
-        ${Picture} {
-            cursor: default;
         }
     }
 `;
@@ -134,11 +178,7 @@ export const Dropdown = styled.div`
 export const Profile = styled.div`
     display: flex;
     align-items: center;
-    margin-left: 20px;
     position: relative;
-    button {
-        cursor: pointer;
-    }
     &:hover > ${Dropdown} {
         display: flex;
         flex-direction: column;
@@ -146,48 +186,56 @@ export const Profile = styled.div`
 `;
 
 export const Feature = styled(Container)`
-    padding: 150px 0 500px 56px;
+    position: static;
+    top: auto;
+    z-index: auto;
     flex-direction: column;
     align-items: flex-start;
-    width: 50%;
+    width: min(620px, 60%);
+    height: auto;
+    border-bottom: 0;
+    background: transparent;
+    padding: var(--sf-space-10) 0 220px var(--sf-space-7);
     @media (max-width: 1100px) {
         display: none;
     }
 `;
 
 export const FeatureCallOut = styled.h2`
-    color: white;
-    font-size: 50px;
-    line-height: normal;
-    font-weight: bold;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.45);
-    margin: 0;
-    margin-bottom: 20px;
+    font-family: var(--sf-font-display);
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--sf-text);
+    font-size: clamp(40px, 6vw, 72px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin: 0 0 var(--sf-space-4);
 `;
 
 export const Text = styled.p`
-    color: white;
-    font-size: 22px;
-    line-height: normal;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.45);
+    color: var(--sf-text-dim);
+    font-size: 18px;
+    line-height: 1.5;
+    max-width: 60ch;
     margin: 0;
 `;
 
 export const PlayButton = styled.button`
-    box-shadow: 0 0.6vw 1vw -0.4vw rgba(0, 0, 0, 0.35);
-    background-color: #e6e6e6;
-    color: #000;
-    border-width: 0;
-    padding: 10px 20px;
-    border-radius: 5px;
-    max-width: 130px;
-    font-size: 20px;
-    margin-top: 10px;
-    font-weight: bold;
+    font-family: var(--sf-font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: var(--sf-accent);
+    color: var(--sf-accent-ink);
+    border: 2px solid var(--sf-accent);
+    border-radius: 0;
+    padding: 12px 22px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: var(--sf-space-4);
     cursor: pointer;
-    transition: background-color 0.5s ease;
+    transition: background var(--sf-dur-fast) var(--sf-ease), color var(--sf-dur-fast) var(--sf-ease);
     &:hover {
-        background-color: #ff0a16;
-        color: white;
+        background: transparent;
+        color: var(--sf-accent);
     }
 `;
