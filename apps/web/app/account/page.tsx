@@ -80,8 +80,7 @@ export default function AccountPage() {
 
         <Section title="Watch history">
           <div className="flex flex-wrap gap-2">
-            <Link href={ROUTES.MOVIE_HISTORY}><GlowButton variant="ghost" size="sm">Movies</GlowButton></Link>
-            <Link href={ROUTES.SHOW_HISTORY}><GlowButton variant="ghost" size="sm">Shows</GlowButton></Link>
+            <Link href={ROUTES.HISTORY}><GlowButton variant="ghost" size="sm">View history</GlowButton></Link>
           </div>
         </Section>
         <Separator />

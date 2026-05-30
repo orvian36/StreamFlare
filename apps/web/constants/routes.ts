@@ -15,5 +15,6 @@ export const UPDATE_PHONE = "/account/phone";
 export const UPDATE_PASSWORD = "/account/password";
 export const MOVIE_HISTORY = "/history/movies";
 export const SHOW_HISTORY = "/history/shows";
+export const HISTORY = "/history";
 export const ONBOARDING = "/onboarding";
 export const ADMIN = "/admin";
