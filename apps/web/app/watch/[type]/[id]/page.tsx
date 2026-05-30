@@ -5,7 +5,7 @@ import { Suspense } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { VideoPlayer } from "../../../../components/watch/video-player";
 import { fetchMovie, fetchShow, fetchEpisodes } from "../../../../lib/title-data";
-import { getProgress, saveProgress, nextEpisode, SAMPLE_VIDEO } from "../../../../lib/watch-data";
+import { getProgress, saveProgress, nextEpisode, LOCAL_VIDEO } from "../../../../lib/watch-data";
 import { posterUrl, type SlideItem } from "../../../../lib/browse-data";
 import { useAuth } from "../../../../context/auth-context";
 
@@ -40,17 +40,16 @@ function WatchInner() {
       if (cancelled) return;
       setTitle(detail.title);
       setPoster(posterUrl(detail.imageUrl));
-      let video = detail.videoUrl;
       if (type === "show") {
         const seasons: SlideItem[] = email && profile ? await fetchEpisodes(id, email, profile) : [];
         const ep = seasons.flatMap((s) => s.data).find((e) => e.SEASON_NO === season && e.EPISODE_NO === episode);
         if (ep) {
-          video = (ep as { VIDEO_URL?: string }).VIDEO_URL ?? video;
           setSubtitle(`S${season} · E${episode}${ep.TITLE ? ` — ${ep.TITLE}` : ""}`);
         }
         setNext(nextEpisode(seasons, season, episode));
       }
-      setSrc(video ?? SAMPLE_VIDEO);
+      // Always stream the bundled local clip, regardless of the title's videoUrl.
+      setSrc(LOCAL_VIDEO);
       if (email && profile) setStartAt(await getProgress({ type, id, season, episode, email, profile }));
       if (!cancelled) setReady(true);
     })();

@@ -1,7 +1,9 @@
 import { api } from "./api-client";
 import type { SlideItem } from "./browse-data";
 
-export const SAMPLE_VIDEO = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+// Every title streams this bundled local clip (served by Next from
+// apps/web/public/videos/bunny.mp4), so playback is reliable without real assets.
+export const LOCAL_VIDEO = "/videos/bunny.mp4";
 
 export interface ProgressRef {
   type: "movie" | "show";

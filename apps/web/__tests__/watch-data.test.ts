@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 const get = vi.fn();
 const post = vi.fn();
 vi.mock("../lib/api-client", () => ({ api: { get: (...a: unknown[]) => get(...a), post: (...a: unknown[]) => post(...a) } }));
-import { getProgress, saveProgress, nextEpisode, SAMPLE_VIDEO } from "../lib/watch-data";
+import { getProgress, saveProgress, nextEpisode, LOCAL_VIDEO } from "../lib/watch-data";
 
 describe("watch-data", () => {
   beforeEach(() => { get.mockReset(); post.mockReset(); });
@@ -33,7 +33,7 @@ describe("watch-data", () => {
     expect(nextEpisode(seasons, 1, 2)).toBeNull();
   });
 
-  it("exposes a sample video url", () => {
-    expect(SAMPLE_VIDEO).toMatch(/^https?:\/\//);
+  it("exposes the bundled local video path", () => {
+    expect(LOCAL_VIDEO).toBe("/videos/bunny.mp4");
   });
 });
